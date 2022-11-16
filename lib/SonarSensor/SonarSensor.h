@@ -4,12 +4,12 @@
 
 class SonarSensor{
     public:
-        SonarSensor(const uint8_t TrigPin,const uint8_t EchoPin);
+        SonarSensor(unsigned short TrigPin,unsigned short EchoPin);
 
         virtual double getDistance(const int powerOfTen) = 0;
     private:
-        uint8_t TrigPin;
-        uint8_t EchoPin;
+        unsigned short TrigPin;
+        unsigned short EchoPin;
 };
 
 

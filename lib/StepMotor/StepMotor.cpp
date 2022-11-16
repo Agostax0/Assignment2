@@ -18,7 +18,7 @@ StepMotor::StepMotor(const uint8_t actPin, const uint8_t movPin, const uint8_t p
 
 void StepMotor::moveOfGivenAngle(short degree){
     this->currentDegree += degree;
-    //movimento
+    //TODO movimento
 }
 
 void StepMotor::resetToZero(){

@@ -1,9 +1,16 @@
 #include <Arduino.h>
+#include "Scheduler.h"
+#include "SonarTask.h"
+#include "SonarSensor.h"
+
+Scheduler scheduler;
+SonarTask *sonar = new SonarTask(4,5);
 
 void setup() {
-  // put your setup code here, to run once:
+  scheduler = Scheduler(); 
+  scheduler.addTask(sonar);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  scheduler.schedule();
 }
