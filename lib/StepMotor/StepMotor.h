@@ -3,22 +3,50 @@
 
 #include "Arduino.h"
 
-class StepMotor{
-    public:
-        StepMotor(const uint8_t actPin, const uint8_t movPin, const uint8_t powPin);
+class StepMotor
+{
+public:
+    StepMotor(const unsigned short actPin, const unsigned short dirPin, const unsigned short pulsePin)
+    {
+        this->actPin = actPin;
+        this->dirPin = dirPin;
+        this->pulsePin = pulsePin;
+        pinMode(this->actPin,OUTPUT);
+        pinMode(this->dirPin,OUTPUT);
+        pinMode(this->pulsePin,OUTPUT);
+        this->currentDegree = 0;
+    }
 
-        void moveOfGivenAngle(const short degrees);
+    void moveOfGivenAngle(short degree)
+    {
+        this->currentDegree += degree;
+        //MOVIMENTO
+        digitalWrite(this->actPin,HIGH);
+        if(degree <= 0){//COUNTERCLOCKWISE
 
-        void resetToZero();
+        }
+        else{//CLOCKWISE
 
-        void setAsZeroDegree();
-    private:
-        uint8_t actPin; 
-        uint8_t movPin; 
-        uint8_t powPin;
-        short startingDegree;
-        short currentDegree;
+        }
+        digitalWrite(this->actPin,LOW);
+    }
+
+    void resetToZero()
+    {
+        this->moveOfGivenAngle(this->startingDegree);
+    }
+
+    void setAsZeroDegree()
+    {
+        this->startingDegree = this->currentDegree;
+    }
+
+private:
+    unsigned short actPin;
+    unsigned short dirPin;
+    unsigned short pulsePin;
+    short startingDegree;
+    short currentDegree;
 };
-
 
 #endif

@@ -6,6 +6,9 @@
 
 class Scheduler{
     public:
+
+        Scheduler();
+
         void init();
 
         bool addTask(Task *task);
@@ -14,6 +17,7 @@ class Scheduler{
     private:
         int nTasks;
         Task* taskList[MAX_TASKS];
+        double* distance;
         int state;
 };
 
