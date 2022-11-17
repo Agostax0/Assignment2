@@ -1,6 +1,9 @@
 #include "Scheduler.h"
-
+#include "Arduino.h"
 #define MAX_TASKS 10
+
+Scheduler::Scheduler(){
+}
 
 void Scheduler::init()
 {
@@ -24,5 +27,6 @@ bool Scheduler::addTask(Task *task)
 
 void Scheduler::schedule()
 {
-    
+    taskList[0]->tick();
+    Serial.println("TASK 0");
 }
