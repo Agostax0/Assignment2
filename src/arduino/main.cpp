@@ -6,6 +6,7 @@
 #include "BlinkingLed.h"
 #include "Led.h"
 #include "Potentiometer.h"
+#include "LCD_I2C.h"
 
 #define WL1 5
 #define WL2 10
@@ -18,7 +19,7 @@ LightSensor lightSensor = LightSensor(A2);
 StepMotor motor = StepMotor(9, 10, 11);
 InfraredSensor pirSensor = InfraredSensor(8);
 BlinkingLed blinkingLed = BlinkingLed(3);
-;
+LCD_I2C lcd(0x27,20,4);
 Potentiometer pot = Potentiometer(A0);
 Led LedA = Led(2);
 Led LedB = Led(4);
@@ -36,6 +37,7 @@ enum alarmState
 void setup()
 {
   Serial.begin(9600);
+  lcd.begin();
 }
 void print_request(String name, double value)
 {
@@ -83,7 +85,14 @@ int getState(double distance)
 }
 void loop()
 {
+
+  
+
   double distance = sonarSensor.getDistance(-2);
+  lcd.clear();
+  lcd.print(distance);
+  lcd.setCursor(0,0);
+  
 
   state = getState(distance);
 
@@ -125,7 +134,7 @@ void loop()
     blinkingLed.switchOff();
   }
 
-  
+
 
   delay(1000);
   /*switch(state){

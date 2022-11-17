@@ -23,7 +23,7 @@ public:
         //MOVIMENTO
         digitalWrite(this->actPin,HIGH);
         if(degree <= 0){//COUNTERCLOCKWISE
-
+            
         }
         else{//CLOCKWISE
 
