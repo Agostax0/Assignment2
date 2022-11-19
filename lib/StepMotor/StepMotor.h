@@ -3,8 +3,15 @@
 
 #include "Arduino.h"
 
-#define stepToDegree(step) (step) * 200 / 360     /* 200:360 = 1:x */
-#define degreeToStep(degree) (degree) * 360 / 200 /* 360:200 = 1:x */
+#define stepToDegree(step) (step) * 200 / 360 /* 200:360 = 1:x */
+#define degreeToStep(degree) (degree) / 1.8   /* 360:200 = 1:x */
+#define abs(x) ((x) > 0 ? (x) : -(x))
+void print_request_mot(String name, double value)
+{
+    Serial.print("current" + name + ": ");
+    Serial.print(value);
+    Serial.println();
+}
 class StepMotor
 {
 public:
@@ -19,7 +26,7 @@ public:
         this->currentDegree = 0;
     }
 
-    void moveOfGivenAngle(short degree)
+    void moveOfGivenAngle(int degree)
     {
         this->currentDegree += degree;
         // MOVIMENTO
@@ -32,8 +39,7 @@ public:
         { // CLOCKWISE
             digitalWrite(this->dirPin, LOW);
         }
-
-        do_n_steps(degreeToStep(degree));
+        do_n_steps(degreeToStep(abs(degree)));
 
         digitalWrite(this->actPin, HIGH);
     }
@@ -48,15 +54,9 @@ public:
         this->startingDegree = this->currentDegree;
     }
 
-    void do_n_steps(unsigned short steps)
+    short getCurrentDegree()
     {
-        for (int i = 0; i < steps; i++)
-        {
-            digitalWrite(this->pulsePin, LOW);
-            delay(10);
-            digitalWrite(this->pulsePin, HIGH);
-            delay(10);
-        }
+        return this->currentDegree;
     }
 
 private:
@@ -65,6 +65,17 @@ private:
     unsigned short pulsePin;
     short startingDegree;
     short currentDegree;
+
+    void do_n_steps(short steps)
+    {
+        for (short i = 0; i <= steps; i++)
+        {
+            digitalWrite(this->pulsePin, LOW);
+            delay(5);
+            digitalWrite(this->pulsePin, HIGH);
+            delay(5);
+        }
+    }
 };
 
 #endif
