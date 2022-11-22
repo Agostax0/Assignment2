@@ -1,6 +1,7 @@
 #include "Led.h"
+#include "Arduino.h"
 
-Led::Led(const unsigned short pin)
+Led::Led(unsigned short pin)
 {
     this->pin = pin;
     pinMode(pin, OUTPUT);

@@ -9,7 +9,7 @@
 class StepMotor
 {
 public:
-    StepMotor(const unsigned short actPin, const unsigned short dirPin, const unsigned short pulsePin);
+    StepMotor(unsigned short actPin, unsigned short dirPin, unsigned short pulsePin);
 
     void moveOfGivenAngle(int degree);
 

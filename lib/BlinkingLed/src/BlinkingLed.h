@@ -1,12 +1,11 @@
 #ifndef __BLINKING__
 #define __BLINKING___
-#include "Arduino.h"
 #include "Led.h"
 
 class BlinkingLed : public Led
 {
 public:
-    BlinkingLed(const unsigned short pin);
+    BlinkingLed(unsigned short pin);
 
     void tick();
 

@@ -1,5 +1,5 @@
 #include "InfraredSensor.h"
-InfraredSensor::InfraredSensor(const unsigned short pin)
+InfraredSensor::InfraredSensor(unsigned short pin)
 {
     this->pin = pin;
     pinMode(pin, INPUT);

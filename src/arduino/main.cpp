@@ -22,7 +22,7 @@ Led LedA = Led(2);
 Led LedB = Led(4);
 Bounce button = Bounce();
 
-Task normal = NormalTask(sonarSensor, lightSensor, LedB, LedA, blinkingLed, pirSensor);
+NormalTask normal = NormalTask(sonarSensor, lightSensor, LedB, LedA, blinkingLed, pirSensor);
 
 bool once = false;
 void setup()

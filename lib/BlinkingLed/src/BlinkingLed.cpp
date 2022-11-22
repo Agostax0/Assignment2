@@ -1,5 +1,7 @@
 #include "BlinkingLed.h"
-BlinkingLed::BlinkingLed(const unsigned short pin)
+#include "Arduino.h"
+#include "Led.h"
+BlinkingLed::BlinkingLed(unsigned short pin)
 {
     this->pin = pin;
     this->speed = 1;

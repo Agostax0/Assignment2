@@ -1,6 +1,6 @@
 #include "LightSensor.h"
 
-LightSensor::LightSensor(const uint8_t pin)
+LightSensor::LightSensor(uint8_t pin)
 {
     this->pin = pin;
     pinMode(this->pin, INPUT);

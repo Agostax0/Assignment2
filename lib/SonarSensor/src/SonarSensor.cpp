@@ -1,13 +1,14 @@
 #include "SonarSensor.h"
 #include "Arduino.h"
-SonarSensor::SonarSensor(const unsigned short TrigPin, const unsigned short EchoPin)
+const float vs = 331.5 + 0.6 * 20;
+SonarSensor::SonarSensor(unsigned short TrigPin, unsigned short EchoPin)
 {
     this->TrigPin = TrigPin;
     this->EchoPin = EchoPin;
     pinMode(this->TrigPin, OUTPUT);
     pinMode(this->EchoPin, INPUT);
 }
-double SonarSensor::getDistance(const short powerOfTen)
+double SonarSensor::getDistance(short powerOfTen)
 {
     long duration;
     double distance;

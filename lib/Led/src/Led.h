@@ -2,12 +2,14 @@
 #define __LED__
 
 #include "Light.h"
-#include "Arduino.h"
+
 class Led : public Light
 {
 public:
+    Led() = default;
     
-    Led(const unsigned short pin);
+    Led(unsigned short pin);
+
     void switchOn();
     void switchOff();
 

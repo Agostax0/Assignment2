@@ -1,5 +1,5 @@
 #include "Potentiometer.h"
-Potentiometer::Potentiometer(const uint8_t pin)
+Potentiometer::Potentiometer(uint8_t pin)
 {
     this->pin = pin;
     pinMode(this->pin, INPUT);

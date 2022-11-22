@@ -7,7 +7,7 @@
 class LightSensor
 {
 public:
-    LightSensor(const uint8_t pin);
+    LightSensor(uint8_t pin);
 
     unsigned short getLightLevel();
 

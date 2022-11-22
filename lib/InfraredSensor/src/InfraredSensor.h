@@ -4,7 +4,7 @@
 class InfraredSensor
 {
 public:
-    InfraredSensor(const unsigned short pin);
+    InfraredSensor(unsigned short pin);
     
     bool readChangeInMovement();
 

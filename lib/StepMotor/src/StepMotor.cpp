@@ -1,7 +1,7 @@
 #include "StepMotor.h"
 #include "Arduino.h"
 
-StepMotor::StepMotor(const unsigned short actPin, const unsigned short dirPin, const unsigned short pulsePin)
+StepMotor::StepMotor(unsigned short actPin, unsigned short dirPin, unsigned short pulsePin)
 {
     this->actPin = actPin;
     this->dirPin = dirPin;
