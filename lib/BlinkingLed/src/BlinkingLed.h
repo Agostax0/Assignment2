@@ -5,6 +5,8 @@
 class BlinkingLed : public Led
 {
 public:
+    BlinkingLed(){}
+
     BlinkingLed(unsigned short pin);
 
     void tick();

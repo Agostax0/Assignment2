@@ -7,6 +7,7 @@ BlinkingLed::BlinkingLed(unsigned short pin)
     this->speed = 1;
     this->currentBrightness = 0;
     pinMode(this->pin, OUTPUT);
+    digitalWrite(this->pin,LOW);
 }
 
 void BlinkingLed::tick()

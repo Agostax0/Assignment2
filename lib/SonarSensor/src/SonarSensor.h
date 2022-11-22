@@ -4,6 +4,8 @@
 class SonarSensor
 {
 public:
+    SonarSensor(){}
+
     SonarSensor(unsigned short TrigPin, unsigned short EchoPin);
 
     double getDistance( short powerOfTen);
