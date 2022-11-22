@@ -1,24 +1,37 @@
 #include "NormalTask.h"
-
-NormalTask::NormalTask(SonarSensor sonar, LightSensor light, Led b, Led a, BlinkingLed c, InfraredSensor pir)
+#include "Util.h"
+int getState(double distance)
+{
+    if (distance < WL1)
+    {
+        return NORMAL;
+    }
+    if (distance < WL2 && distance > WL1)
+    {
+        return PRE_ALARM;
+    }
+    if (distance > WL_MAX || ((distance > WL2) && (distance < WL_MAX)))
+    {
+        return ALARM;
+    }
+}
+NormalTask::NormalTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights)
 {
     this->sonar_sensor = sonar;
-    this->light_sensor = light;
-    this->led_A = a;
+    this->lights = lights;
     this->led_B = b;
     this->led_C = c;
-    this->pir_sensor = pir;
-    this->detected = false;
 }
 
 void NormalTask::init()
 {
     this->sonar_sampling = -1;
+    this->lights.init();
 }
 
 void NormalTask::tick()
 {
-    if (getState(sonar_sensor.getDistance(-2)) == NORMAL)
+    if (getState(sonar_sensor.getDistance(-2)) == NORMAL /* || 1*/)
     {
         if (sonar_sampling == -1)
         {
@@ -32,30 +45,15 @@ void NormalTask::tick()
                 sonar_sampling = -1;
             }
 
-            led_B.switchOn();
-            led_C.switchOff();
-
-            if (pir_cooldown == -1)
-            {
-                pir_cooldown = millis();
+            if(!led_B.getState()){
+                led_B.switchOn();
             }
-
-            bool light_level = (this->light_sensor.getLightLevel() < TH_L) ? true : false;
-            bool cooldown = (millis() - this->pir_cooldown > T1) ? true : false;
-
-            if (!light_level || (!this->pir_sensor.readChangeInMovement() && cooldown))
-            {
-                this->led_A.switchOff();
-                pir_cooldown = -1;
+            if(led_C.getState()){
+                led_C.switchOff();
             }
-            else
-            {
-                this->led_A.switchOn();
-                if (this->pir_sensor.readChangeInMovement())
-                {
-                    pir_cooldown = millis();
-                }
-            }
+            
+
+            this->lights.tick();
         }
     }
     else

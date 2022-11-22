@@ -1,26 +1,23 @@
 #ifndef __NORMALTASK__
 #define __NORMALTASK__
 #include "Task.h"
-#include "Util.h"
-
+#include "SonarSensor.h"
+#include "SmartLighting.h"
+#include "BlinkingLed.h"
 
 class NormalTask : public Task
 {
 public:
-    NormalTask(SonarSensor sonar, LightSensor light, Led b,Led a, BlinkingLed c, InfraredSensor pir);
+    NormalTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights);
     void init();
     void tick();
 
 private:
     long sonar_sampling;
-    bool detected;
-    long pir_cooldown;
     SonarSensor sonar_sensor;
-    LightSensor light_sensor;
-    Led led_A;
+    SmartLighting lights;
     Led led_B;
     BlinkingLed led_C;
-    InfraredSensor pir_sensor;
 };
 
 #endif
