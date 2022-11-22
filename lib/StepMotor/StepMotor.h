@@ -5,7 +5,7 @@
 
 #define stepToDegree(step) (step) * 200 / 360 /* 200:360 = 1:x */
 #define degreeToStep(degree) (degree) / 1.8   /* 360:200 = 1:x */
-#define abs(x) ((x) > 0 ? (x) : -(x))
+
 void print_request_mot(String name, double value)
 {
     Serial.print("current" + name + ": ");
