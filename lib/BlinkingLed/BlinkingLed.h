@@ -6,6 +6,7 @@
 class BlinkingLed
 {
 public:
+    BlinkingLed(){}
     BlinkingLed(const unsigned short pin)
     {
         this->pin = pin;
@@ -24,7 +25,7 @@ public:
 
         analogWrite(this->pin, this->currentBrightness);
     }
-    void setSpeed(short speed)
+    void setSpeed(float speed)
     {
         this->speed = speed;
     }
@@ -42,7 +43,7 @@ public:
 
 private:
     unsigned short pin;
-    unsigned short currentBrightness;
-    short speed;
+    float currentBrightness;
+    float speed;
 };
 #endif
