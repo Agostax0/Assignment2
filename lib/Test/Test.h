@@ -1,39 +1,13 @@
 #include <Arduino.h>
-#include "SonarSensor.h"
-#include "LightSensor.h"
-#include "StepMotor.h"
-#include "InfraredSensor.h"
-#include "BlinkingLed.h"
-#include "Led.h"
-#include "Potentiometer.h"
-#include "LCD_I2C.h"
-#include "Bounce2.h"
-#define WL1 5
-#define WL2 10
-#define WL_MAX 15
 
-#define TH_L 300
 
-SonarSensor sonarSensor = SonarSensor(7, 6);
-LightSensor lightSensor = LightSensor(A2);
-StepMotor motor = StepMotor(9, 10, 11);
-InfraredSensor pirSensor = InfraredSensor(8);
-BlinkingLed blinkingLed = BlinkingLed(3);
-LCD_I2C lcd(0x27, 20, 4);
-Potentiometer pot = Potentiometer(A0);
-Led LedA = Led(2);
-Led LedB = Led(4);
-Bounce button = Bounce();
+#include "Util.h"
+
 
 double distance;
 int state;
 
-enum alarmState
-{
-    NORMAL,
-    PRE_ALARM,
-    ALARM
-};
+
 String stateToString(int state)
 {
     switch (state)
@@ -66,21 +40,12 @@ void print_request(String name, double value)
 
     Serial.println();
 }
-bool range(int value, int expected, int percentage)
-{
-    double percentage_value = expected * (percentage / 100.0);
 
-    int lower_bound = expected - percentage_value;
-
-    int upper_bound = expected + percentage_value;
-
-    return (value > lower_bound && value < upper_bound) ? true : false;
-}
 void waitForCenteredPotentiometer()
 {
     while (!range(pot.read(), (int)1023 / 2, 5))
     {
-        print_request("pot", pot.read());
+        //lcd.print();
     }
 }
 void mapPotentiometerToMotor()
@@ -100,7 +65,7 @@ void mapPotentiometerToMotor()
             double mapToDegree;
             short orientation = (last-read < 0) ? 1 : -1;
             mapToDegree = (90.0/half) * (abs((last-read)));
-            if(mapToDegree>5){
+            if(mapToDegree>5){ //5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
                 motor.moveOfGivenAngle(orientation * (int)mapToDegree);
                 last = read;
             }
@@ -112,22 +77,7 @@ void mapPotentiometerToMotor()
     motor.setAsZeroDegree();
 }
 
-int getState(double distance)
-{
-    if (distance < WL1)
-    {
-        return NORMAL;
-    }
-    if (distance < WL2 && distance > WL1)
-    {
-        return PRE_ALARM;
-    }
-    if (distance > WL2 && distance < WL_MAX)
-    {
-        return ALARM;
-    }
-    return -1;
-}
+
 void print_state()
 {
 
@@ -162,15 +112,6 @@ public:
 
     void tick()
     {
-        if (!first)
-        {
-            mapPotentiometerToMotor();
-            first = true;
-        }
-        else
-        {
-            Serial.println("finished");
-        }
-        delay(5000);
+        
     }
 };

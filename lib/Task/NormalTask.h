@@ -36,7 +36,7 @@ public:
                     this->sonar_sensor.getDistance(-2);
                     sonar_sampling = -1;
                 }
-
+                
                 led_B.switchOn();
                 led_C.switchOff();
                 
