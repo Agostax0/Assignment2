@@ -1,6 +1,6 @@
 #ifndef __INFRAREDPASSIVESENSOR__
 #define __INFRAREDPASSIVESENSOR__
-
+#include "Arduino.h"
 class InfraredSensor
 {
 public:
