@@ -15,10 +15,24 @@ public:
         pinMode(this->EchoPin, INPUT);
     }
 
-    double getDistance(const int powerOfTen)
+    
+
+    double getDistance(const short powerOfTen){
+        if(this->distance == -1){
+            this->calcDistance(powerOfTen);
+        }
+        return this->distance;
+    }
+
+private:
+    unsigned short TrigPin;
+    unsigned short EchoPin;
+    double distance = -1;
+
+    void calcDistance(const short powerOfTen)
     {
         long duration;
-        double distance;
+        double temp;
 
         digitalWrite(this->TrigPin, LOW);
         delayMicroseconds(2);
@@ -29,14 +43,10 @@ public:
 
         duration = pulseIn(this->EchoPin, HIGH);
 
-        distance = duration / 1000.0 / 1000.0 / pow(10,powerOfTen) * vs / 2.0;
+        temp = duration / 1000.0 / 1000.0 / pow(10,powerOfTen) * vs / 2.0;
 
-        return distance;
+        this->distance = temp;
     }
-
-private:
-    unsigned short TrigPin;
-    unsigned short EchoPin;
 };
 
 #endif

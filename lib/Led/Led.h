@@ -6,6 +6,8 @@
 class Led : public Light
 {
 public:
+    Led(){}
+    
     Led(const unsigned short pin)
     {
         this->pin = pin;
