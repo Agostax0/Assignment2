@@ -1,7 +1,14 @@
 #include <Arduino.h>
 
+#include "StepMotor.h"
+
+#include "Potentiometer.h"
+
+#include "Bounce2.h"
+#include "SmartLighting.h"
 #include "Scheduler.h"
 #include "NormalTask.h"
+#include "PreAlarmTask.h"
 // TODO divide into tasks
 // TODO MCD for sampling times
 // TODO Test Blinking Led
@@ -10,6 +17,8 @@
 // TODO move abs macro in one single file
 
 // REMEMBER during ALARM phase the Blinking Led speed to blink every 2 sec is 0,255
+
+
 Scheduler scheduler = Scheduler();
 SonarSensor sonarSensor = SonarSensor(7, 6);
 LightSensor lightSensor = LightSensor(A2);
@@ -22,7 +31,9 @@ Led LedA = Led(2);
 Led LedB = Led(4);
 Bounce button = Bounce();
 
-NormalTask normal = NormalTask(sonarSensor, lightSensor, LedB, LedA, blinkingLed, pirSensor);
+SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
+
+NormalTask normal = NormalTask(sonarSensor, LedB, blinkingLed, lights);
 
 bool once = false;
 void setup()
@@ -34,6 +45,7 @@ void setup()
   lcd.backlight();
   // scheduler.init();
   // scheduler.addTask(normal);
+
 }
 
 void loop()
@@ -41,14 +53,21 @@ void loop()
   // scheduler.schedule();
   if (!once)
   {
+    normal.init();
+    int times = 1000;
     unsigned long time0 = millis();
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < times; i++)
     {
       normal.tick();
     }
-    Serial.println((millis()-time0)/100);
-  }
-  else{
+    unsigned long time1 = millis();
+    Serial.print("Normal Task Time: ");
+    Serial.print((float)(time1 - time0) / times);
+    Serial.println();
 
+    once = true;
+  }
+  else
+  {
   }
 }

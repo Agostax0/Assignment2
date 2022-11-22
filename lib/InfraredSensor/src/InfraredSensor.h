@@ -4,6 +4,8 @@
 class InfraredSensor
 {
 public:
+    InfraredSensor(){}
+
     InfraredSensor(unsigned short pin);
     
     bool readChangeInMovement();

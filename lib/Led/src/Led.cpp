@@ -4,7 +4,9 @@
 Led::Led(unsigned short pin)
 {
     this->pin = pin;
-    pinMode(pin, OUTPUT);
+    this->state = LOW;
+    pinMode(this->pin, OUTPUT);
+    digitalWrite(this->pin,LOW);
 }
 
 void Led::switchOff()

@@ -6,7 +6,7 @@
 class Led : public Light
 {
 public:
-    Led() = default;
+    Led(){}
     
     Led(unsigned short pin);
 
