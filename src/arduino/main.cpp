@@ -34,9 +34,9 @@ Bounce button = Bounce();
 
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
-Task* normal = new  NormalTask(sonarSensor, LedB, blinkingLed, lights);
-Task* pre_alarm = new PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
-Task* alarm = new AlarmTask(motor,pot,sonarSensor,LedB,blinkingLed,lights,lcd,button);
+NormalTask normal = NormalTask(sonarSensor, LedB, blinkingLed, lights);
+PreAlarmTask pre_alarm = PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
+AlarmTask alarm = AlarmTask(motor,pot,sonarSensor,LedB,blinkingLed,lights,lcd,button);
 bool once = false;
 void setup()
 {
@@ -48,9 +48,9 @@ void setup()
 
   int period = 10;
 
-  normal->init(period);
-  pre_alarm->init(period);
-  alarm->init(period);
+  normal.init(period);
+  pre_alarm.init(period);
+  alarm.init(period);
   // scheduler.init(period);
   // scheduler.addTask(normal);
   // scheduler.addTask(pre_alarm);
@@ -69,8 +69,9 @@ void loop()
     for (int i = 0; i < times; i++)
     {
       //scheduler.schedule();
-      normal->tick();
-      
+      //normal.tick();
+      //pre_alarm.tick();
+      //alarm.tick();
     }
     unsigned long time1 = millis();
     Serial.print("Normal Task Time: "); //47.33 ms
