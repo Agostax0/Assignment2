@@ -35,3 +35,7 @@ void BlinkingLed::switchOn()
     digitalWrite(this->pin, HIGH);
     this->currentBrightness = 255;
 }
+
+int BlinkingLed::getState(){
+    return (this->currentBrightness>0) ? 1 : 0; 
+}

@@ -9,31 +9,34 @@
 #include "Scheduler.h"
 #include "NormalTask.h"
 #include "PreAlarmTask.h"
+#include "AlarmTask.h"
 // TODO divide into tasks
 // TODO MCD for sampling times
 // TODO Test Blinking Led
 // TODO Test PiR sensor
 // TODO Java side Program
 
+
 // REMEMBER during ALARM phase the Blinking Led speed to blink every 2 sec is 0,255
 
 
 Scheduler scheduler = Scheduler();
-SonarSensor sonarSensor = SonarSensor(7, 6);
-LightSensor lightSensor = LightSensor(A2);
-StepMotor motor = StepMotor(9, 10, 11);
-InfraredSensor pirSensor = InfraredSensor(8);
-BlinkingLed blinkingLed = BlinkingLed(3);
+SonarSensor sonarSensor(7, 6);
+LightSensor lightSensor(A2);
+StepMotor motor (9, 10, 11);
+InfraredSensor pirSensor (8);
+BlinkingLed blinkingLed (3);
 LCD_I2C lcd(0x27, 20, 4);
-Potentiometer pot = Potentiometer(A0);
-Led LedA = Led(2);
-Led LedB = Led(4);
+Potentiometer pot (A0);
+Led LedA (2);
+Led LedB (4);
 Bounce button = Bounce();
 
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
-NormalTask normal = NormalTask(sonarSensor, LedB, blinkingLed, lights);
-PreAlarmTask pre_alarm = PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
+Task* normal = new  NormalTask(sonarSensor, LedB, blinkingLed, lights);
+Task* pre_alarm = new PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
+Task* alarm = new AlarmTask(motor,pot,sonarSensor,LedB,blinkingLed,lights,lcd,button);
 bool once = false;
 void setup()
 {
@@ -42,8 +45,16 @@ void setup()
   button.interval(25);
   lcd.begin();
   lcd.backlight();
-  // scheduler.init();
+
+  int period = 10;
+
+  normal->init(period);
+  pre_alarm->init(period);
+  alarm->init(period);
+  // scheduler.init(period);
   // scheduler.addTask(normal);
+  // scheduler.addTask(pre_alarm);
+  // scheduler.addTask(alarm);
 
 }
 
@@ -52,19 +63,19 @@ void loop()
   // scheduler.schedule();
   if (!once)
   {
-    normal.init();
-    pre_alarm.init();
+
     int times = 1000;
     unsigned long time0 = millis();
     for (int i = 0; i < times; i++)
     {
-      //normal.tick();
-      pre_alarm.tick();
+      //scheduler.schedule();
+      normal->tick();
+      
     }
     unsigned long time1 = millis();
-    //Serial.print("Normal Task Time: "); //47.33 ms
+    Serial.print("Normal Task Time: "); //47.33 ms
     //Serial.print("Pre-Alarm Task Time: "); //104.00 ms
-    Serial.print((float)(time1 - time0) / times);
+    Serial.print(time1 - time0);
     Serial.println();
 
     once = true;

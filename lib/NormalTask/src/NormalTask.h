@@ -9,7 +9,7 @@ class NormalTask : public Task
 {
 public:
     NormalTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights);
-    void init();
+    void init(int period);
     void tick();
 
 private:

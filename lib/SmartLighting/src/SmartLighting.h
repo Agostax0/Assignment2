@@ -9,6 +9,7 @@ class SmartLighting : public Task
 public:
     SmartLighting(){}
     SmartLighting(Led A, LightSensor ll, InfraredSensor pir);
+    void turnOff();
     void init();
     void tick();
 

@@ -10,7 +10,7 @@ class PreAlarmTask : public Task
 public:
     PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd);
 
-    void init();
+    void init(int period);
 
     void tick();
 

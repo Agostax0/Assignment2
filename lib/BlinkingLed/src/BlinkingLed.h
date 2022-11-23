@@ -14,6 +14,9 @@ public:
     void setSpeed(float speed);
 
     void switchOff();
+
+    int getState();
+
     void switchOn();
 
 private:

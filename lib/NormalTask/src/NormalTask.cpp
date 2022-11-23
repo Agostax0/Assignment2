@@ -1,20 +1,5 @@
 #include "NormalTask.h"
 #include "Util.h"
-int getState(double distance)
-{
-    if (distance < WL1)
-    {
-        return NORMAL;
-    }
-    if (distance < WL2 && distance > WL1)
-    {
-        return PRE_ALARM;
-    }
-    if (distance > WL_MAX || ((distance > WL2) && (distance < WL_MAX)))
-    {
-        return ALARM;
-    }
-}
 NormalTask::NormalTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights)
 {
     this->sonar_sensor = sonar;
@@ -23,15 +8,16 @@ NormalTask::NormalTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting li
     this->led_C = c;
 }
 
-void NormalTask::init()
+void NormalTask::init(int period)
 {
+    Task::init(period);
     this->sonar_sampling = -1;
     this->lights.init();
 }
 
 void NormalTask::tick()
 {
-    if (getState(sonar_sensor.getDistance(-2)) == NORMAL /* || 1*/)
+    if (getState(sonar_sensor.getDistance(-2)) == NORMAL || 1)
     {
         if (sonar_sampling == -1)
         {
@@ -41,20 +27,21 @@ void NormalTask::tick()
         {
             if ((millis() - sonar_sampling) > PE_normal)
             {
-                this->sonar_sensor.getDistance(-2);
+                this->sonar_sensor.calcDistance(-2);
                 sonar_sampling = -1;
+                Serial.println("Sampled in NORMAL");
             }
-
-            if(!led_B.getState()){
-                led_B.switchOn();
-            }
-            if(led_C.getState()){
-                led_C.switchOff();
-            }
-            
-
-            this->lights.tick();
         }
+        if (!led_B.getState())
+        {
+            led_B.switchOn();
+        }
+        if (led_C.getState())
+        {
+            led_C.switchOff();
+        }
+
+        this->lights.tick();
     }
     else
     {

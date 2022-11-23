@@ -6,6 +6,7 @@ StepMotor::StepMotor(unsigned short actPin, unsigned short dirPin, unsigned shor
     this->actPin = actPin;
     this->dirPin = dirPin;
     this->pulsePin = pulsePin;
+    this->degrees = 90;
     pinMode(this->actPin, OUTPUT);
     pinMode(this->dirPin, OUTPUT);
     pinMode(this->pulsePin, OUTPUT);
@@ -13,7 +14,7 @@ StepMotor::StepMotor(unsigned short actPin, unsigned short dirPin, unsigned shor
 
 void StepMotor::moveOfGivenAngle(int degree)
 {
-
+    this->degrees += degree;
     this->steps += degreeToStep(degree);
 }
 
@@ -37,8 +38,14 @@ void StepMotor::tick_step_buffer()
         digitalWrite(this->pulsePin, HIGH);
         delay(5);
         //REMOVES A STEP FROM THE STEPS TO MAKE
-        this->steps = (this->steps > 0) ? this->steps-1 : this->steps+1; 
+        this->degrees = (this->steps > 0) ? this->degrees - stepToDegree(1) : this->degrees + stepToDegree(1);
+        this->steps = (this->steps > 0) ? this->steps-1 : this->steps+1;
+        
 
         digitalWrite(this->actPin, HIGH);
     }
+}
+
+void StepMotor::moveToGivenAngle(int degree){
+    this->moveOfGivenAngle(this->degrees-degree);
 }

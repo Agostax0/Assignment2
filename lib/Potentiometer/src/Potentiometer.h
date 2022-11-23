@@ -4,6 +4,8 @@
 class Potentiometer
 {
 public:
+    Potentiometer(){}
+
     Potentiometer(uint8_t pin);
 
     unsigned short read();

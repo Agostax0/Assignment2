@@ -7,8 +7,9 @@ SonarSensor::SonarSensor(unsigned short TrigPin, unsigned short EchoPin)
     this->EchoPin = EchoPin;
     pinMode(this->TrigPin, OUTPUT);
     pinMode(this->EchoPin, INPUT);
+    this->measured_distance = -1;
 }
-double SonarSensor::getDistance(short powerOfTen)
+void SonarSensor::calcDistance(short powerOfTen)
 {
     long duration;
     double distance;
@@ -24,5 +25,5 @@ double SonarSensor::getDistance(short powerOfTen)
 
     distance = duration / 1000.0 / 1000.0 / pow(10, powerOfTen) * vs / 2.0;
 
-    return distance;
+    this->measured_distance = distance;
 }

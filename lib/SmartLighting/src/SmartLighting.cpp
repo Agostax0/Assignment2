@@ -27,14 +27,23 @@ void SmartLighting::tick()
     }
     else
     {
-        
-        if(!this->A.getState()){
+
+        if (!this->A.getState())
+        {
             this->A.switchOn();
         }
-        
+
         if (this->pir.readChangeInMovement())
         {
             pir_cooldown = millis();
         }
+    }
+}
+
+void SmartLighting::turnOff()
+{
+    if (this->A.getState())
+    {
+        this->A.switchOff();
     }
 }

@@ -8,6 +8,11 @@ double distance;
 int state;
 
 
+#include "Potentiometer.h"
+
+Potentiometer pot(A0);
+Bounce button = Bounce();
+
 String stateToString(int state)
 {
     switch (state)
@@ -59,19 +64,18 @@ void mapPotentiometerToMotor()
     {
         button.update();
         double half = 1023 / 2;
-        int read = pot.read();
-        if (!range(read, last, 1))
-        {
-            double mapToDegree;
-            short orientation = (last-read < 0) ? 1 : -1;
-            mapToDegree = (90.0/half) * (abs((last-read)));
-            if(mapToDegree>5){ //5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
-                motor.moveOfGivenAngle(orientation * (int)mapToDegree);
-                last = read;
+            int read = pot.read();
+            if (!range(read, last, 1))
+            {
+                double mapToDegree;
+                short orientation = (last - read < 0) ? 1 : -1;
+                mapToDegree = (90.0 / half) * (abs((last - read)));
+                if (mapToDegree > 5)
+                { // 5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
+                    motor.moveOfGivenAngle(orientation * (int)mapToDegree);
+                    last = read;
+                }
             }
-            
-
-        }
     }
 
     motor.setAsZeroDegree();
