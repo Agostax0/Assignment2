@@ -1,4 +1,5 @@
 #include "PreAlarmTask.h"
+#include "BlinkingLed.h"
 #include "Util.h"
 PreAlarmTask::PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd){
     this->lcd = lcd;
@@ -10,24 +11,11 @@ PreAlarmTask::PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLightin
 
 void PreAlarmTask::init(){
     this->sonar_sampling = -1;
+    this->led_C.setSpeed(2000/(2*255));
 }
-int getState(double distance)
-{
-    if (distance < WL1)
-    {
-        return NORMAL;
-    }
-    if (distance < WL2 && distance > WL1)
-    {
-        return PRE_ALARM;
-    }
-    if (distance > WL_MAX || ((distance > WL2) && (distance < WL_MAX)))
-    {
-        return ALARM;
-    }
-}
+
 void PreAlarmTask::tick(){
-    if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM /*|| 1*/)
+    if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM || 1)
     {
         if (sonar_sampling == -1)
         {
@@ -55,7 +43,7 @@ void PreAlarmTask::tick(){
 
             lcd.print(sonar_sensor.getDistance(-2));
 
-
+            this->led_C.tick();
 
             this->lights.tick();
         }

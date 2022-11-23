@@ -14,7 +14,6 @@
 // TODO Test Blinking Led
 // TODO Test PiR sensor
 // TODO Java side Program
-// TODO move abs macro in one single file
 
 // REMEMBER during ALARM phase the Blinking Led speed to blink every 2 sec is 0,255
 
@@ -34,7 +33,7 @@ Bounce button = Bounce();
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
 NormalTask normal = NormalTask(sonarSensor, LedB, blinkingLed, lights);
-
+PreAlarmTask pre_alarm = PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
 bool once = false;
 void setup()
 {
@@ -54,14 +53,17 @@ void loop()
   if (!once)
   {
     normal.init();
+    pre_alarm.init();
     int times = 1000;
     unsigned long time0 = millis();
     for (int i = 0; i < times; i++)
     {
-      normal.tick();
+      //normal.tick();
+      pre_alarm.tick();
     }
     unsigned long time1 = millis();
-    Serial.print("Normal Task Time: ");
+    //Serial.print("Normal Task Time: "); //47.33 ms
+    //Serial.print("Pre-Alarm Task Time: "); //104.00 ms
     Serial.print((float)(time1 - time0) / times);
     Serial.println();
 

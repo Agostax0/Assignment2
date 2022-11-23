@@ -1,5 +1,5 @@
 #ifndef __BLINKING__
-#define __BLINKING___
+#define __BLINKING__
 #include "Led.h"
 
 class BlinkingLed : public Led

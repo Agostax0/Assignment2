@@ -1,8 +1,8 @@
 #ifndef __PREALARMTASK__
 #define __PREALARMTASK__
 #include "Task.h"
-#include "SonarSensor.h"
 #include "BlinkingLed.h"
+#include "SonarSensor.h"
 #include "SmartLighting.h"
 #include "LCD_I2C.h"
 class PreAlarmTask : public Task
