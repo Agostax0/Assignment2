@@ -18,6 +18,7 @@ void SmartLighting::tick()
     }
 
     bool light_level = (this->ll.getLightLevel() < TH_L) ? true : false;
+    //Serial.println(this->ll.getLightLevel());
     bool cooldown = (millis() - this->pir_cooldown > T1) ? true : false;
 
     if (!light_level || (!this->pir.readChangeInMovement() && cooldown))

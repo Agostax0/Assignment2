@@ -1,12 +1,12 @@
 #ifndef __UTIL__
 #define __UTIL__
 
-#define PE_normal 2000
-#define PE_pre_alarm 1000
-#define PE_alarm 500
+#define PE_normal 300
+#define PE_pre_alarm 200
+#define PE_alarm 100
 
 #define T1 200
-#define TH_L 800
+#define TH_L 200
 
 #define WL1 15
 #define WL2 10

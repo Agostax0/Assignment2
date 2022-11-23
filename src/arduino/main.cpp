@@ -10,33 +10,30 @@
 #include "NormalTask.h"
 #include "PreAlarmTask.h"
 #include "AlarmTask.h"
-// TODO divide into tasks
+
 // TODO MCD for sampling times
-// TODO Test Blinking Led
-// TODO Test PiR sensor
+// TODO Test Alarm
+// TODO Better Blinking Led
 // TODO Java side Program
-
-
-// REMEMBER during ALARM phase the Blinking Led speed to blink every 2 sec is 0,255
-
+// TODO state diagram
 
 Scheduler scheduler = Scheduler();
 SonarSensor sonarSensor(7, 6);
 LightSensor lightSensor(A2);
-StepMotor motor (9, 10, 11);
-InfraredSensor pirSensor (8);
-BlinkingLed blinkingLed (3);
+StepMotor motor(9, 10, 11);
+InfraredSensor pirSensor(8);
+BlinkingLed blinkingLed(3);
 LCD_I2C lcd(0x27, 20, 4);
-Potentiometer pot (A0);
-Led LedA (2);
-Led LedB (4);
+Potentiometer pot(A0);
+Led LedA(2);
+Led LedB(4);
 Bounce button = Bounce();
 
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
 NormalTask normal = NormalTask(sonarSensor, LedB, blinkingLed, lights);
-PreAlarmTask pre_alarm = PreAlarmTask(sonarSensor,LedB,blinkingLed,lights,lcd);
-AlarmTask alarm = AlarmTask(motor,pot,sonarSensor,LedB,blinkingLed,lights,lcd,button);
+PreAlarmTask pre_alarm = PreAlarmTask(sonarSensor, LedB, blinkingLed, lights, lcd);
+AlarmTask alarm = AlarmTask(motor, pot, sonarSensor, LedB, blinkingLed, lights, lcd, button);
 bool once = false;
 void setup()
 {
@@ -55,7 +52,6 @@ void setup()
   // scheduler.addTask(normal);
   // scheduler.addTask(pre_alarm);
   // scheduler.addTask(alarm);
-
 }
 
 void loop()
@@ -64,20 +60,25 @@ void loop()
   if (!once)
   {
 
-    int times = 1000;
-    unsigned long time0 = millis();
-    for (int i = 0; i < times; i++)
+    int times = 100;
+    for (int j = 0; j < 5; j++)
     {
-      //scheduler.schedule();
-      //normal.tick();
-      //pre_alarm.tick();
-      //alarm.tick();
+      unsigned long time0 = millis();
+      for (int i = 0; i < times; i++)
+      {
+        // scheduler.schedule();
+        // normal.tick();
+        // pre_alarm.tick();
+        // alarm.tick();
+      }
+      unsigned long time1 = millis();
+      // Serial.print("Normal Task Time: "); //(ms) 0.18 , 0.2 , 0.18 , 0.2 , 0.18 || avg = 0,188
+      //Serial.print("Pre-Alarm Task Time: "); //(ms) 27.26 , 20.42 , 23.07 , 27.28 , 27.48 || avg = 25.10
+      //Serial.print("Alarm Task Time: "); //(ms)  || avg = 
+      double time_per_tick = (double)(time1 - time0) / times;
+      Serial.print(time_per_tick);
+      Serial.println();
     }
-    unsigned long time1 = millis();
-    Serial.print("Normal Task Time: "); //47.33 ms
-    //Serial.print("Pre-Alarm Task Time: "); //104.00 ms
-    Serial.print(time1 - time0);
-    Serial.println();
 
     once = true;
   }
