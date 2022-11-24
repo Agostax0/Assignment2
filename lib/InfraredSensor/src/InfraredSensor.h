@@ -12,7 +12,7 @@ public:
 
 private:
     unsigned short pin;
-    bool lastState;
+    short lastState;
 };
 
 #endif

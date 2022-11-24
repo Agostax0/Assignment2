@@ -18,10 +18,13 @@ void SmartLighting::tick()
     }
 
     bool light_level = (this->ll.getLightLevel() < TH_L) ? true : false;
-    //Serial.println(this->ll.getLightLevel());
-    bool cooldown = (millis() - this->pir_cooldown > T1) ? true : false;
 
-    if (!light_level || (!this->pir.readChangeInMovement() && cooldown))
+    bool cooldown = (millis() - this->pir_cooldown > T1) ? true : false;
+    
+    //Serial.println("MOV "+String(this->pir.readChangeInMovement()));
+    //Serial.println("CoolDown: "+ String(cooldown));
+
+    if (!light_level || (!this->pir.readChangeInMovement() && cooldown)) //TOO MUCH LIGHT OR (THERE WAS NONE && T1 TIME HAS ELAPSED SINCE LAST DETECTION)
     {
         this->A.switchOff();
         pir_cooldown = -1;
@@ -29,7 +32,7 @@ void SmartLighting::tick()
     else
     {
 
-        if (!this->A.getState())
+        if (!this->A.getState() && this->pir.readChangeInMovement()) //TURN ON THE LED AFTER CHECKING PRESENCE
         {
             this->A.switchOn();
         }
