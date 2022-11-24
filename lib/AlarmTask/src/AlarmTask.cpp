@@ -19,23 +19,19 @@ void AlarmTask::init(int period)
 {
     Task::init(period);
     this->last = -1;
+    this->manual = false;
 }
 
 void AlarmTask::tick()
 {
-    if (getState(sonar_sensor.getDistance(-2)) == ALARM || 1)
+    this->sonar_sensor.calcDistance(-2);
+    if (getState(sonar_sensor.getDistance(-2)) == ALARM)
     {
         this->lights.turnOff();
 
-        if (this->led_B.getState())
-        {
-            this->led_B.switchOff();
-        }
+        this->led_B.switchOff();
 
-        if (!this->led_C.getState())
-        {
-            this->led_C.switchOn();
-        }
+        this->led_C.switchOn();
 
         lcd.clear();
 
@@ -54,28 +50,32 @@ void AlarmTask::tick()
         if (!this->manual && change)
         {                        // manual=false && button was pressed
             this->manual = true; // activate manual mode
+            // Serial.println("Activating Manual Mode");
         }
         else if (this->manual && change)
         {                         // manual=true && button was pressed
             this->manual = false; // deactivate manual mode
+            // Serial.println("DeActivating Manual Mode");
         }
         else if (this->manual && !change)
         { // manual=true && button was not pressed
             // actual manual handling
+            // Serial.println("Called Manual");
             this->manualInput();
+            this->mot.tick_step_buffer();
         }
         else
         { // this is the 00 case in the truth table -> the automatic handling
+            // Serial.println("Called Auto");
             this->automaticInput();
         }
     }
     else
     {
-        this->mot.setSteps(0); // stops from getting unwanted steps from pregress alarms
-        this->manual = false;
-        this->last = -1;
+        // this->mot.setSteps(0); // stops from getting unwanted steps from pregress alarms
+        // this->manual = false;
+        // this->last = -1;
     }
-        
 }
 
 void AlarmTask::automaticInput()
@@ -96,7 +96,7 @@ void AlarmTask::manualInput()
 {
     double half = 1023 / 2;
     int read = this->pot.read();
-    if (!range(read, (last==-1) ? read : last, 1)) //for the first iteration last = read -> always true
+    if (!range(read, (last == -1) ? read : last, 1)) // for the first iteration last = read -> always true
     {
         double mapToDegree;
         short orientation = (last - read < 0) ? 1 : -1;
@@ -107,4 +107,5 @@ void AlarmTask::manualInput()
             last = read;
         }
     }
+    // Serial.println("Exiting Manual function");
 }

@@ -16,18 +16,14 @@ void NormalTask::init(int period)
 
 void NormalTask::tick()
 {
-    if (getState(sonar_sensor.getDistance(-2)) == NORMAL || 1)
+    this->sonar_sensor.calcDistance(-2);
+    // Serial.println(this->sonar_sensor.getDistance(-2));
+    if (getState(sonar_sensor.getDistance(-2)) == NORMAL)
     {
-        if (!led_B.getState())
-        {
-            led_B.switchOn();
-        }
-        if (led_C.getState())
-        {
-            led_C.switchOff();
-        }
+        // Serial.println("Normal");
+        led_B.switchOn();
+        led_C.switchOff();
 
         this->lights.tick();
-
     }
 }

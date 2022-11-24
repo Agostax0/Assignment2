@@ -11,19 +11,19 @@ PreAlarmTask::PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLightin
 }
 
 void PreAlarmTask::init(int period)
-{   
+{
     Task::init(period);
-    this->led_C.setSpeed(255.0/(1000/mcd_period));
+    this->led_C.setSpeed(255.0 / (1000 / mcd_period));
 }
 
 void PreAlarmTask::tick()
 {
-    if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM || 1)
+    this->sonar_sensor.calcDistance(-2);
+    if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM)
     {
-        if (this->led_B.getState())
-        {
-            this->led_B.switchOff();
-        }
+        Serial.println("Pre-Alarm");
+
+        this->led_B.switchOff();//this->(led).getState() doesn't work
 
         lcd.clear();
 

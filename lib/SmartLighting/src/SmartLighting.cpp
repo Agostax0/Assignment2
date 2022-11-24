@@ -46,8 +46,5 @@ void SmartLighting::tick()
 
 void SmartLighting::turnOff()
 {
-    if (this->A.getState())
-    {
-        this->A.switchOff();
-    }
+    this->A.switchOff();
 }

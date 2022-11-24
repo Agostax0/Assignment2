@@ -2,15 +2,15 @@
 
 int getState(double distance)
 {
-    if (distance < WL1)
+    if (distance >= WL1)
     {
         return NORMAL;
     }
-    if (distance <= WL2 && distance > WL1)
+    if (distance >= WL2 && distance < WL1)
     {
         return PRE_ALARM;
     }
-    if (distance > WL_MAX || ((distance > WL2) && (distance <= WL_MAX)))
+    if (((distance < WL2) && (distance >= WL_MAX)) || distance < WL_MAX)
     {
         return ALARM;
     }

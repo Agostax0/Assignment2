@@ -7,11 +7,11 @@
 
 #define mcd_period 200
 
-#define T1 200
+#define T1 5000
 #define TH_L 200
 
-#define WL1 15
-#define WL2 10
+#define WL1 25
+#define WL2 15
 #define WL_MAX 5
 
 enum alarmState
