@@ -1,9 +1,11 @@
 #ifndef __UTIL__
 #define __UTIL__
 
-#define PE_normal 300
-#define PE_pre_alarm 200
-#define PE_alarm 100
+#define PE_normal 600
+#define PE_pre_alarm 400
+#define PE_alarm 200
+
+#define mcd_period 200
 
 #define T1 200
 #define TH_L 200
@@ -21,8 +23,5 @@ enum alarmState
 
 int getState(double distance);
 bool range(int value, int expected, int percentage);
-
-
-
 
 #endif

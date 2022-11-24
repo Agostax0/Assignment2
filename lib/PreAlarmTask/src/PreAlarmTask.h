@@ -15,7 +15,6 @@ public:
     void tick();
 
 private:
-    long sonar_sampling;
     LCD_I2C lcd;
     SonarSensor sonar_sensor;
     SmartLighting lights;

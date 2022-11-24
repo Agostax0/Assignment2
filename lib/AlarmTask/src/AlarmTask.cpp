@@ -18,7 +18,6 @@ AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led 
 void AlarmTask::init(int period)
 {
     Task::init(period);
-    this->sonar_sampling = -1;
     this->last = -1;
 }
 
@@ -26,20 +25,6 @@ void AlarmTask::tick()
 {
     if (getState(sonar_sensor.getDistance(-2)) == ALARM || 1)
     {
-
-        if (sonar_sampling == -1)
-        {
-            sonar_sampling = millis();
-        }
-        else
-        {
-            if ((millis() - sonar_sampling) > PE_alarm)
-            {
-                this->sonar_sensor.calcDistance(-2);
-                sonar_sampling = -1;
-                Serial.println("Sampled in ALARM");
-            }
-        }
         this->lights.turnOff();
 
         if (this->led_B.getState())
@@ -77,7 +62,7 @@ void AlarmTask::tick()
         else if (this->manual && !change)
         { // manual=true && button was not pressed
             // actual manual handling
-
+            this->manualInput();
         }
         else
         { // this is the 00 case in the truth table -> the automatic handling
@@ -86,10 +71,11 @@ void AlarmTask::tick()
     }
     else
     {
-        sonar_sampling = -1;
         this->mot.setSteps(0); // stops from getting unwanted steps from pregress alarms
         this->manual = false;
+        this->last = -1;
     }
+        
 }
 
 void AlarmTask::automaticInput()

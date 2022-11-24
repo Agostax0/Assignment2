@@ -12,11 +12,13 @@ BlinkingLed::BlinkingLed(unsigned short pin)
 
 void BlinkingLed::tick()
 {
-    if (currentBrightness < 0 || currentBrightness > 255)
+    if (currentBrightness <= 0 || currentBrightness > 255)
     {
         speed = (-1 * speed);
     }
     this->currentBrightness += this->speed;
+
+    this->currentBrightness = (this->currentBrightness < 0) ? 0 : this->currentBrightness; 
 
     analogWrite(this->pin, this->currentBrightness);
 }

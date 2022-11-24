@@ -13,27 +13,13 @@ PreAlarmTask::PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLightin
 void PreAlarmTask::init(int period)
 {   
     Task::init(period);
-    this->sonar_sampling = -1;
-    this->led_C.setSpeed(7);
+    this->led_C.setSpeed(255.0/(1000/mcd_period));
 }
 
 void PreAlarmTask::tick()
 {
     if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM || 1)
     {
-        if (sonar_sampling == -1)
-        {
-            sonar_sampling = millis();
-        }
-        else
-        {
-            if ((millis() - sonar_sampling) > PE_pre_alarm)
-            {
-                this->sonar_sensor.calcDistance(-2);
-                sonar_sampling = -1;
-                Serial.println("Sampled in PRE-ALARM");
-            }
-        }
         if (this->led_B.getState())
         {
             this->led_B.switchOff();
@@ -52,9 +38,5 @@ void PreAlarmTask::tick()
         this->led_C.tick();
 
         this->lights.tick();
-    }
-    else
-    {
-        sonar_sampling = -1;
     }
 }

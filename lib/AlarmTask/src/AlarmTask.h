@@ -23,7 +23,6 @@ public:
     void tick();
 
 private:
-    long sonar_sampling;
     SonarSensor sonar_sensor;
     SmartLighting lights;
     Led led_B;
