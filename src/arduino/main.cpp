@@ -12,7 +12,8 @@
 #include "AlarmTask.h"
 
 
-
+// TODO Fix Button
+// TODO Fix TimerOne since it uses interrupts
 // TODO Test Alarm
 // TODO Java side Program
 // TODO state diagram
@@ -35,11 +36,13 @@ Task *normal = new NormalTask(sonarSensor, LedB, blinkingLed, lights);
 Task *pre_alarm = new PreAlarmTask(sonarSensor, LedB, blinkingLed, lights, lcd);
 Task *alarm = new AlarmTask(motor, pot, sonarSensor, LedB, blinkingLed, lights, lcd, button);
 
+bool once = false;
+
 void setup()
 {
   Serial.begin(9600);
-  button.attach(5, INPUT);
-  button.interval(25);
+  button.attach(12, INPUT);
+  button.interval(50);
   lcd.begin();
   lcd.backlight();
 
@@ -47,12 +50,35 @@ void setup()
   pre_alarm->init(mcd_period);
   alarm->init(mcd_period);
   scheduler.init(mcd_period);
-  //scheduler.addTask(normal);
+  
+  scheduler.addTask(normal);
   scheduler.addTask(pre_alarm);
-  // scheduler.addTask(alarm);
+  scheduler.addTask(alarm);
 }
 
 void loop()
 {
   scheduler.schedule();
+  //delay(500);
+
+  /*if (!once)
+  {
+
+    double times = 100;
+    unsigned long time0 = millis();
+    for (int i = 0; i < times; i++)
+    {
+      //scheduler.schedule();
+      //normal.tick();
+      //pre_alarm->tick();
+      //alarm->tick();
+    }
+    unsigned long time1 = millis();
+    Serial.print("Alarm Task Time: "); //47.33 ms
+    //Serial.print("Pre-Alarm Task Time: "); //104.00 ms
+    Serial.print((time1 - time0)/times);
+    Serial.println();
+
+    once = true;
+  }*/
 }

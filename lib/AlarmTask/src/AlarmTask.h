@@ -36,6 +36,8 @@ private:
 
     bool manual;
 
+    bool once;
+
     void automaticInput();
 
     void manualInput();

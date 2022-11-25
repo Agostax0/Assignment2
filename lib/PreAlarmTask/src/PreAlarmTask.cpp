@@ -18,10 +18,10 @@ void PreAlarmTask::init(int period)
 
 void PreAlarmTask::tick()
 {
-    this->sonar_sensor.calcDistance(-2);
-    if (getState(sonar_sensor.getDistance(-2)) == PRE_ALARM)
+    this->sonar_sensor.calcDistance(cm);
+    if (getState(sonar_sensor.getDistance(cm)) == PRE_ALARM)
     {
-        Serial.println("Pre-Alarm");
+        //Serial.println("Pre-Alarm");
 
         this->led_B.switchOff();//this->(led).getState() doesn't work
 
@@ -33,7 +33,7 @@ void PreAlarmTask::tick()
 
         lcd.setCursor(10, 0);
 
-        lcd.print(sonar_sensor.getDistance(-2));
+        lcd.print(sonar_sensor.getDistance(cm));
 
         this->led_C.tick();
 

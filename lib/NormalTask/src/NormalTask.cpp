@@ -16,9 +16,9 @@ void NormalTask::init(int period)
 
 void NormalTask::tick()
 {
-    this->sonar_sensor.calcDistance(-2);
-    // Serial.println(this->sonar_sensor.getDistance(-2));
-    if (getState(sonar_sensor.getDistance(-2)) == NORMAL)
+    this->sonar_sensor.calcDistance(cm);
+    // Serial.println(this->sonar_sensor.getDistance(cm));
+    if (getState(sonar_sensor.getDistance(cm)) == NORMAL)
     {
         // Serial.println("Normal");
         led_B.switchOn();
