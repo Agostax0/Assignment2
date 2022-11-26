@@ -50,13 +50,11 @@ void AlarmTask::tick()
         if (!this->manual && change)
         {                        // manual=false && button was pressed
             this->manual = true; // activate manual mode
-            Serial.println("Activating Manual Mode");
             this->mot.reset();
         }
         else if (this->manual && change)
         {                         // manual=true && button was pressed
             this->manual = false; // deactivate manual mode
-            Serial.println("DeActivating Manual Mode");
             this->mot.reset();
             this->pot_last_read = -1;
         }
@@ -73,7 +71,6 @@ void AlarmTask::tick()
     }
     else
     {
-        Serial.println("NOT ALARM SITUATION");
         this->manual = false;
         this->pot_last_read = false;
 
@@ -103,20 +100,16 @@ void AlarmTask::automaticInput()
 void AlarmTask::manualInput()
 {
 
-    Serial.println("Manual");
-
     double half = 1023 / 2;
     int read = this->pot.read();
-    last = (!pot_last_read) ? read : last;
-    if (!range(read, last, 1)) // for the first iteration last = read -> always true
+    last = (!pot_last_read) ? read : last; // for the first iteration last = read -> always true
+    if (!range(read, last, 1)) 
     {
-        //Serial.println("\t outside of range");
         double mapToDegree;
         short orientation = (last - read < 0) ? 1 : -1;
         mapToDegree = (90.0 / half) * (abs((last - read)));
         if (mapToDegree > 5)
         { // 5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
-            //Serial.println("\t\t move of: " + String(orientation * (int)mapToDegree));
             this->mot.moveOfGivenAngle(orientation * (int)mapToDegree);
             last = read;
         }

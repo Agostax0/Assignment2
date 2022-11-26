@@ -60,25 +60,4 @@ void loop()
 {
   scheduler.schedule();
   //delay(500);
-
-  /*if (!once)
-  {
-
-    double times = 100;
-    unsigned long time0 = millis();
-    for (int i = 0; i < times; i++)
-    {
-      //scheduler.schedule();
-      //normal.tick();
-      //pre_alarm->tick();
-      //alarm->tick();
-    }
-    unsigned long time1 = millis();
-    Serial.print("Alarm Task Time: "); //47.33 ms
-    //Serial.print("Pre-Alarm Task Time: "); //104.00 ms
-    Serial.print((time1 - time0)/times);
-    Serial.println();
-
-    once = true;
-  }*/
 }

@@ -32,7 +32,6 @@ void StepMotor::tick()
 {
     if (this->stepsLeft != 0)
     {
-        Serial.println("StepsLeft: " + String(this->stepsLeft) + "\t CurrentSteps: " + String(this->current_steps));
         // MOVIMENTO
         digitalWrite(this->actPin, LOW);
         if (this->stepsLeft < 0)

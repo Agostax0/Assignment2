@@ -21,9 +21,8 @@ void PreAlarmTask::tick()
     this->sonar_sensor.calcDistance(cm);
     if (getState(sonar_sensor.getDistance(cm)) == PRE_ALARM)
     {
-        //Serial.println("Pre-Alarm");
 
-        this->led_B.switchOff();//this->(led).getState() doesn't work
+        this->led_B.switchOff();
 
         lcd.clear();
 
