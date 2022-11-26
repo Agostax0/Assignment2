@@ -1,6 +1,8 @@
 #ifndef __UTIL__
 #define __UTIL__
 
+#define cm -2
+
 #define PE_normal 600
 #define PE_pre_alarm 400
 #define PE_alarm 200
