@@ -26,4 +26,6 @@ void SonarSensor::calcDistance(short powerOfTen)
     distance = duration / 1000.0 / 1000.0 / pow(10, powerOfTen) * vs / 2.0;
 
     this->measured_distance = distance;
+
+    //this->measured_distance = 7.5;
 }

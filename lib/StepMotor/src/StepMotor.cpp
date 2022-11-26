@@ -6,46 +6,62 @@ StepMotor::StepMotor(unsigned short actPin, unsigned short dirPin, unsigned shor
     this->actPin = actPin;
     this->dirPin = dirPin;
     this->pulsePin = pulsePin;
-    this->degrees = 90;
+    this->steps = 0;
+    this->current_steps = 0;
     pinMode(this->actPin, OUTPUT);
     pinMode(this->dirPin, OUTPUT);
     pinMode(this->pulsePin, OUTPUT);
 }
 
+void StepMotor::init(int period){
+    Task::init(period);
+}
+
 void StepMotor::moveOfGivenAngle(int degree)
 {
-    this->degrees += degree;
     this->steps += degreeToStep(degree);
 }
 
-void StepMotor::tick_step_buffer()
+void StepMotor::moveOfGivenSteps(int steps)
+{
+    if(steps > this->current_steps){
+        int delta = (steps - this->current_steps);
+        this->current_steps += delta;
+        this->steps += delta;
+    }
+    
+}
+
+void StepMotor::tick()
 {
     if (this->steps != 0)
     {
+        Serial.println("Steps left: " + String(this->steps));
         // MOVIMENTO
         digitalWrite(this->actPin, LOW);
         if (this->steps < 0)
         { // COUNTERCLOCKWISE
             digitalWrite(this->dirPin, HIGH);
+            this->steps++;
+            this->current_steps--;
         }
         else
         { // CLOCKWISE
             digitalWrite(this->dirPin, LOW);
+            this->steps--;
+            this->current_steps++;
         }
         //MAKES A STEP
         digitalWrite(this->pulsePin, LOW);
-        delay(5);
+        delayMicroseconds(1);
         digitalWrite(this->pulsePin, HIGH);
-        delay(5);
-        //REMOVES A STEP FROM THE STEPS TO MAKE
-        this->degrees = (this->steps > 0) ? this->degrees - stepToDegree(1) : this->degrees + stepToDegree(1);
-        this->steps = (this->steps > 0) ? this->steps-1 : this->steps+1;
-        
-
+        //delay(5);
+    }
+    else{
         digitalWrite(this->actPin, HIGH);
     }
 }
 
-void StepMotor::moveToGivenAngle(int degree){
-    this->moveOfGivenAngle(this->degrees-degree);
+void StepMotor::resetToZero(){
+    this->steps = - this->current_steps;
 }
