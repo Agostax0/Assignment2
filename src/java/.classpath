@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/user/Desktop/progetto/elaborato_basi_di_dati/Assignment2/src/java/lib/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="C:/Users/user/Desktop/progetto/elaborato_basi_di_dati/Assignment2/src/java/lib/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/progetto/elaborato_basi_di_dati/Assignment2/src/java/lib/jssc-2.9.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
