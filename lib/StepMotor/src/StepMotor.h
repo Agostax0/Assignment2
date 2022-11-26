@@ -17,8 +17,6 @@ public:
 
     void moveOfGivenSteps(int steps);
 
-    void resetToZero(int degree);
-
     void init(int period);
 
     void tick();
@@ -26,15 +24,20 @@ public:
     void resetToZero();
 
     int getSteps(){return this->current_steps;}
+
+    int getStepsLeft(){return this->stepsLeft;}
+
+    void reset(){this->stepsLeft = 0; this->current_steps = 0;}
 private:
     unsigned short actPin;
     unsigned short dirPin;
     unsigned short pulsePin;
-    int degrees;
 
     int current_steps;
 
-    int steps;
+    bool once;
+
+    int stepsLeft;
 };
 
 #endif

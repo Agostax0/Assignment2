@@ -1,7 +1,7 @@
 #include "AlarmTask.h"
 #include "Util.h"
 
-#define alpha(x) ((x) * (-18)) + 270
+#define alpha(x) 100 - ((x)-5) * 10;
 
 AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd, Bounce button)
 {
@@ -14,13 +14,13 @@ AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led 
     this->lcd = lcd;
     this->btn = button;
 
-    this->once = false;
+    this->pot_last_read = false;
 }
 
 void AlarmTask::init(int period)
 {
     Task::init(period);
-    this->last = -1;
+    this->pot_last_read = false;
     this->manual = false;
 }
 
@@ -45,67 +45,54 @@ void AlarmTask::tick()
 
         lcd.print(sonar_sensor.getDistance(cm));
 
-        btn.read();
-
-        this->btn.update();
-
         bool change = digitalRead(12);
-
-        // Serial.println("Manual: " + String(this->manual) + "\t Button: " + String(digitalRead(12)));
 
         if (!this->manual && change)
         {                        // manual=false && button was pressed
             this->manual = true; // activate manual mode
             Serial.println("Activating Manual Mode");
+            this->mot.reset();
         }
         else if (this->manual && change)
         {                         // manual=true && button was pressed
             this->manual = false; // deactivate manual mode
             Serial.println("DeActivating Manual Mode");
+            this->mot.reset();
+            this->pot_last_read = -1;
         }
         else if (this->manual && !change)
         { // manual=true && button was not pressed
             // actual manual handling
-            // Serial.println("Called Manual");
             this->manualInput();
             this->mot.tick();
         }
         else
         { // this is the 00 case in the truth table -> the automatic handling
-            // Serial.println("Called Auto");
             this->automaticInput();
         }
     }
     else
     {
         Serial.println("NOT ALARM SITUATION");
-        //this->mot.resetSteps(); // stops from getting unwanted steps from pregress alarms
         this->manual = false;
-        this->last = -1;
+        this->pot_last_read = false;
 
-        int stepsLeft = this->mot.getSteps();
-        if(stepsLeft!=0){
-            if(stepsLeft>0){
-                this->mot.tick();
-            }
-            else{
-                Serial.println("Going back");
-                this->mot.resetToZero();
-                
-            }
+        if (digitalRead(12))
+        {
+            this->mot.reset();
         }
+
+        this->mot.resetToZero();
     }
 }
 
 void AlarmTask::automaticInput()
 {
 
-    if (!this->mot.getSteps()) // controls if this command was already called and issued a movement to the motor
+    if (!this->mot.getStepsLeft()) // controls if this command was already called and issued a movement to the motor
     {
-        int alpha_value = 100 - (this->sonar_sensor.getDistance(cm) - 5) * 10; // alpha(this->sonar_sensor.getDistance(cm)) - 90; // the motor knows values from -90 to +90 degrees
-        Serial.println("Given: " + String(this->sonar_sensor.getDistance(cm)) + " im moving by steps: " + String(alpha_value));
-        // this->mot.moveOfGivenAngle(alpha_value);
-            this->mot.moveOfGivenSteps(alpha_value);
+        int alpha_value = alpha(this->sonar_sensor.getDistance(cm));
+        this->mot.moveOfGivenSteps(alpha_value);
     }
     else // if the motor has some steps to take
     {
@@ -115,18 +102,23 @@ void AlarmTask::automaticInput()
 
 void AlarmTask::manualInput()
 {
+
+    Serial.println("Manual");
+
     double half = 1023 / 2;
     int read = this->pot.read();
-    if (!range(read, (last == -1) ? read : last, 1)) // for the first iteration last = read -> always true
+    last = (!pot_last_read) ? read : last;
+    if (!range(read, last, 1)) // for the first iteration last = read -> always true
     {
+        //Serial.println("\t outside of range");
         double mapToDegree;
         short orientation = (last - read < 0) ? 1 : -1;
         mapToDegree = (90.0 / half) * (abs((last - read)));
         if (mapToDegree > 5)
         { // 5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
+            //Serial.println("\t\t move of: " + String(orientation * (int)mapToDegree));
             this->mot.moveOfGivenAngle(orientation * (int)mapToDegree);
             last = read;
         }
     }
-    // Serial.println("Exiting Manual function");
 }

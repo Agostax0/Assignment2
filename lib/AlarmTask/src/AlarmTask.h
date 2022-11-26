@@ -36,7 +36,7 @@ private:
 
     bool manual;
 
-    bool once;
+    bool pot_last_read;
 
     void automaticInput();
 
