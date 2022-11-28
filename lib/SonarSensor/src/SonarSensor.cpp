@@ -27,5 +27,13 @@ void SonarSensor::calcDistance(short powerOfTen)
 
     this->measured_distance = distance;
 
-    //this->measured_distance = 7.5;
+
 }
+
+double SonarSensor::getDistance(short powerOfTen){
+        if(this->measured_distance == -1){
+            this->calcDistance(powerOfTen);
+        }
+        Serial.println(String(measured_distance));
+        return this->measured_distance;
+    }

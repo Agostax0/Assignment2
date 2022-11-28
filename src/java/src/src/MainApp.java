@@ -1,7 +1,6 @@
-package test;
+package src;
 
 import java.awt.BorderLayout;
-import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,14 +10,12 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.Series;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import jssc.SerialPort;
 import jssc.SerialPortList;
 
-public class Main{
+public class MainApp{
 	private static String CONNECT = "Connect";
 	private static String DISCONNECT = "Disconnect";
 	private static String FAILURE = "Failure";
@@ -110,10 +107,14 @@ public class Main{
 				try {
 					String msg = channel.receiveMsg();
 					System.out.println(msg);
-					double waterLevel = Double.parseDouble(msg);
-					data.add(x++,waterLevel);
+					if(msg!="") {
+						double waterLevel = Double.parseDouble(msg);
+						data.add(x++,waterLevel);
+					}
+					
 					
 				} catch (InterruptedException e) {
+					System.out.println("failed to receive in port");
 					e.printStackTrace();
 				}
 			}

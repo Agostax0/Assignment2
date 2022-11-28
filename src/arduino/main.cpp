@@ -11,11 +11,6 @@
 #include "PreAlarmTask.h"
 #include "AlarmTask.h"
 
-
-// TODO Fix Button
-// TODO Fix TimerOne since it uses interrupts
-// TODO Test Alarm
-// TODO Java side Program
 // TODO state diagram
 
 Scheduler scheduler;

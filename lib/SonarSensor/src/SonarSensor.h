@@ -8,12 +8,7 @@ public:
 
     SonarSensor(unsigned short TrigPin, unsigned short EchoPin);
 
-    double getDistance(short powerOfTen){
-        if(this->measured_distance == -1){
-            this->calcDistance(powerOfTen);
-        }
-        return this->measured_distance;
-    }
+    double getDistance(short powerOfTen);
     void calcDistance(short powerOfTen);
 
 private:
