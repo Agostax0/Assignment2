@@ -37,8 +37,6 @@ private:
 
     bool manual;
 
-    bool serial;
-
     void automaticInput();
 
     void manualInput();

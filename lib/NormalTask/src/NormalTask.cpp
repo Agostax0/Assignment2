@@ -24,4 +24,7 @@ void NormalTask::tick()
 
         this->lights.tick();
     }
+    else{
+        updateSerial();
+    }
 }

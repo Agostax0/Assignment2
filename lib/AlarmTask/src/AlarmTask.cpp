@@ -14,7 +14,6 @@ AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led 
     this->lights = lights;
     this->lcd = lcd;
     this->btn = button;
-    this->serial = false;
     this->manual = false;
 }
 
@@ -46,37 +45,20 @@ void AlarmTask::tick()
 
         bool change = digitalRead(this->btn);
 
-        if (MsgService.isMsgAvailable() || this->serial)
-        {
-            Msg *msg = MsgService.receiveMsg();
-            String content = msg->getContent();
-            if (content.equals("MANUAL"))
-            {
-                this->mot.reset();
-                this->serial = true;
-            }
-            else if (content.equals("NOMANUAL"))
-            {
-                this->mot.reset();
-                this->serial = false;
-            }
-            else
-            {
-                serialInput(content.toInt());
-            }
-            delete msg;
-        }
-
-        if (this->serial)
+        if (serial)
         {
             lcd.setCursor(0, 3);
             lcd.print("SERIAL");
-
+            lcd.setCursor(0, 2);
+            lcd.print(this->mot.getSteps());
+            lcd.setCursor(5, 2);
+            lcd.print(this->mot.getStepsLeft());
+            serialInput(serial_read);
             this->mot.tick();
         }
         else
         {
-            this->serial_last = -1;
+            serial_last = -1;
             if (!this->manual && change)
             {                        // manual=false && button was pressed
                 this->manual = true; // activate manual mode
@@ -95,6 +77,10 @@ void AlarmTask::tick()
                 // actual manual handling
                 lcd.setCursor(0, 3);
                 lcd.print("MANUAL");
+                lcd.setCursor(0, 2);
+                lcd.print(this->mot.getSteps());
+                lcd.setCursor(5, 2);
+                lcd.print(this->mot.getStepsLeft());
                 this->manualInput();
                 this->mot.tick();
             }
@@ -102,17 +88,22 @@ void AlarmTask::tick()
             { // this is the 00 case in the truth table -> the automatic handling
                 lcd.setCursor(0, 3);
                 lcd.print("AUTO");
+                lcd.setCursor(0, 2);
+                lcd.print(this->mot.getSteps());
+                lcd.setCursor(5, 2);
+                lcd.print(this->mot.getStepsLeft());
                 this->automaticInput();
             }
         }
     }
     else
     {
+        updateSerial();
         this->manual = false;
 
         this->mot.resetToZero();
         this->last = -1;
-        this->serial_last = -1;
+        serial_last = -1;
     }
 }
 

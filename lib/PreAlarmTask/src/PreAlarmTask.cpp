@@ -38,4 +38,7 @@ void PreAlarmTask::tick()
 
         this->lights.tick();
     }
+    else{
+        updateSerial();
+    }
 }

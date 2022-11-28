@@ -26,4 +26,9 @@ enum alarmState
 int getState(double distance);
 bool range(int value, int expected, int percentage);
 
+void updateSerial();
+
+extern bool serial;
+extern int serial_read;
+
 #endif
