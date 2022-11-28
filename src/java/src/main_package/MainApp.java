@@ -21,6 +21,7 @@ public class MainApp{
 	private static String DISCONNECT = "Disconnect";
 	private static String MANUAL_ON = "Manual ON";
 	private static String MANUAL_OFF = "Manual OFF";
+	private static double ALARM_THRESHOLD = 15.0;
 	//private static String FAILURE = "Failure";
 	
 	private static SerialCommChannel channel;
@@ -69,6 +70,7 @@ public class MainApp{
 				String selectedPort = portList.getSelectedItem().toString();
 				try {
 					channel = new SerialCommChannel(selectedPort,9600);
+					System.out.println("Connected to: " + selectedPort);
 					portList.setEnabled(false);
 					src.setText(DISCONNECT);
 				} catch (Exception e1) {
@@ -113,12 +115,6 @@ public class MainApp{
 			}
 		});
 		
-		slider.addChangeListener(cl->{
-			JSlider src = (JSlider) cl.getSource();
-			int value = src.getValue();
-			channel.sendMsg(String.valueOf(value));
-		});
-		
 
 		
 		
@@ -139,6 +135,9 @@ public class MainApp{
 					if(msg!="") {
 						double waterLevel = Double.parseDouble(msg);
 						data.add(x++,waterLevel);
+						if(waterLevel<=ALARM_THRESHOLD && slider.isEnabled()){
+							channel.sendMsg(String.valueOf(slider.getValue()));
+						}
 					}
 					
 				} catch (InterruptedException e) {
@@ -146,9 +145,9 @@ public class MainApp{
 					e.printStackTrace();
 				}
 			}
-			/*else {
-				System.out.println("failed to connect to port");
-			}*/
+			else {
+				System.out.println("channel was has not been setup");
+			}
 			
 		}
 	}
