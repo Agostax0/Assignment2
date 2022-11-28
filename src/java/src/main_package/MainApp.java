@@ -48,6 +48,7 @@ public class MainApp{
 		topPanel.add(connectButton);
 		
 		JButton bBtn = new JButton(MANUAL_OFF);
+		bBtn.setEnabled(false);
 		JSlider slider = new JSlider(0,1023,(int)1023/2);
 		slider.setEnabled(false);
 		
@@ -60,6 +61,7 @@ public class MainApp{
 
 		
 		XYSeries data = new XYSeries("Sonar Sensor Readings");
+		data.setMaximumItemCount(30);
 		XYSeriesCollection dataset = new XYSeriesCollection(data);
 		
 		JFreeChart chart = ChartFactory.createXYLineChart("Water Level", "Time (seconds)" , "Height", dataset);
@@ -72,30 +74,16 @@ public class MainApp{
 					channel = new SerialCommChannel(selectedPort,9600);
 					System.out.println("Connected to: " + selectedPort);
 					portList.setEnabled(false);
+					bBtn.setEnabled(true);
 					src.setText(DISCONNECT);
 				} catch (Exception e1) {
 					System.out.println("There was an error with the port");
 					System.exit(0);
 					e1.printStackTrace();
 				}
-				/*Thread thread = new Thread(){
-					int x = 0;
-					@Override
-					public void run() {
-						try {
-							String msg = channel.receiveMsg();
-							double waterLevel = Double.parseDouble(msg);
-							data.add(x++,waterLevel);
-							
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						
-					}
-				};
-				thread.start();*/
 			}
 			else {
+				bBtn.setEnabled(false);
 				channel.close();
 				portList.setEnabled(true);
 				src.setText(CONNECT);
@@ -106,10 +94,12 @@ public class MainApp{
 			JButton btn = (JButton) al.getSource();
 			
 			if(btn.getText().equals(MANUAL_ON)) {
+				channel.sendMsg("NOMANUAL");
 				slider.setEnabled(false);
 				btn.setText(MANUAL_OFF);
 			}
 			else {
+				channel.sendMsg("MANUAL");
 				slider.setEnabled(true);
 				btn.setText(MANUAL_ON);
 			}
@@ -127,17 +117,21 @@ public class MainApp{
 		window.setVisible(true);
 		
 		int x = 0;
-		
+		boolean first_read= true;
+		int last = 0;
 		while(true) {
 			if(channel!=null) {
 				try {
 					String msg = channel.receiveMsg();
 					if(msg!="") {
 						double waterLevel = Double.parseDouble(msg);
-						data.add(x++,waterLevel);
+						data.add(x++/5.0,waterLevel);
 						if(waterLevel<=ALARM_THRESHOLD && slider.isEnabled()){
-							channel.sendMsg(String.valueOf(slider.getValue()));
+							
+							channel.sendMsg(""+slider.getValue());
+							
 						}
+						Thread.sleep(200);
 					}
 					
 				} catch (InterruptedException e) {

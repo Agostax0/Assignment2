@@ -9,14 +9,14 @@
 #include "Led.h"
 #include "StepMotor.h"
 #include "Potentiometer.h"
-#include "Bounce2.h"
+
 
 class AlarmTask : public Task
 {
 public:
     AlarmTask() {}
 
-    AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd, Bounce btn);
+    AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd, int btn);
 
     void init(int period);
 
@@ -30,17 +30,20 @@ private:
     LCD_I2C lcd;
     Potentiometer pot;
     StepMotor mot;
-    Bounce btn;
+    int btn;
 
-    int last;
+    int last = -1;
+    int serial_last = -1;
 
     bool manual;
 
-    bool pot_last_read;
+    bool serial;
 
     void automaticInput();
 
     void manualInput();
+
+    void serialInput(int value);
 };
 
 #endif

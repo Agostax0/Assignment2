@@ -4,7 +4,7 @@
 
 #include "Potentiometer.h"
 
-#include "Bounce2.h"
+
 #include "SmartLighting.h"
 #include "Scheduler.h"
 #include "NormalTask.h"

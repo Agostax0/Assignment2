@@ -1,9 +1,10 @@
 #include "AlarmTask.h"
+#include "MsgService.h"
 #include "Util.h"
 
 #define alpha(x) 100 - ((x)-5) * 10;
 
-AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd, Bounce button)
+AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led b, BlinkingLed c, SmartLighting lights, LCD_I2C lcd, int button)
 {
     this->mot = motor;
     this->pot = pot;
@@ -13,15 +14,13 @@ AlarmTask::AlarmTask(StepMotor motor, Potentiometer pot, SonarSensor sonar, Led 
     this->lights = lights;
     this->lcd = lcd;
     this->btn = button;
-
-    this->pot_last_read = false;
+    this->serial = false;
+    this->manual = false;
 }
 
 void AlarmTask::init(int period)
 {
     Task::init(period);
-    this->pot_last_read = false;
-    this->manual = false;
 }
 
 void AlarmTask::tick()
@@ -45,41 +44,75 @@ void AlarmTask::tick()
 
         lcd.print(sonar_sensor.getDistance(cm));
 
-        bool change = digitalRead(12);
+        bool change = digitalRead(this->btn);
 
-        if (!this->manual && change)
-        {                        // manual=false && button was pressed
-            this->manual = true; // activate manual mode
-            this->mot.reset();
+        if (MsgService.isMsgAvailable() || this->serial)
+        {
+            Msg *msg = MsgService.receiveMsg();
+            String content = msg->getContent();
+            if (content.equals("MANUAL"))
+            {
+                this->mot.reset();
+                this->serial = true;
+            }
+            else if (content.equals("NOMANUAL"))
+            {
+                this->mot.reset();
+                this->serial = false;
+            }
+            else
+            {
+                serialInput(content.toInt());
+            }
+            delete msg;
         }
-        else if (this->manual && change)
-        {                         // manual=true && button was pressed
-            this->manual = false; // deactivate manual mode
-            this->mot.reset();
-            this->pot_last_read = -1;
-        }
-        else if (this->manual && !change)
-        { // manual=true && button was not pressed
-            // actual manual handling
-            this->manualInput();
+
+        if (this->serial)
+        {
+            lcd.setCursor(0, 3);
+            lcd.print("SERIAL");
+
             this->mot.tick();
         }
         else
-        { // this is the 00 case in the truth table -> the automatic handling
-            this->automaticInput();
+        {
+            this->serial_last = -1;
+            if (!this->manual && change)
+            {                        // manual=false && button was pressed
+                this->manual = true; // activate manual mode
+                this->mot.reset();
+                // Serial.println("Manual Mode Activate");
+            }
+            else if (this->manual && change)
+            {                         // manual=true && button was pressed
+                this->manual = false; // deactivate manual mode
+                this->mot.reset();
+                this->last = -1;
+                // Serial.println("Manual Mode DeActivate");
+            }
+            else if (this->manual && !change)
+            { // manual=true && button was not pressed
+                // actual manual handling
+                lcd.setCursor(0, 3);
+                lcd.print("MANUAL");
+                this->manualInput();
+                this->mot.tick();
+            }
+            else
+            { // this is the 00 case in the truth table -> the automatic handling
+                lcd.setCursor(0, 3);
+                lcd.print("AUTO");
+                this->automaticInput();
+            }
         }
     }
     else
     {
         this->manual = false;
-        this->pot_last_read = false;
-
-        if (digitalRead(12))
-        {
-            this->mot.reset();
-        }
 
         this->mot.resetToZero();
+        this->last = -1;
+        this->serial_last = -1;
     }
 }
 
@@ -99,19 +132,33 @@ void AlarmTask::automaticInput()
 
 void AlarmTask::manualInput()
 {
+    int potVal = map(this->pot.read(), 0, 1024, 0, 100);
 
-    double half = 1023 / 2;
-    int read = this->pot.read();
-    last = (!pot_last_read) ? read : last; // for the first iteration last = read -> always true
-    if (!range(read, last, 1)) 
+    potVal = 100 - potVal;
+
+    // Serial.println("PotVal: " + String(potVal));
+
+    if (last == -1)
     {
-        double mapToDegree;
-        short orientation = (last - read < 0) ? 1 : -1;
-        mapToDegree = (90.0 / half) * (abs((last - read)));
-        if (mapToDegree > 5)
-        { // 5 being the 1% of the average read of the potentiometer, otherwise the motor was called for a less than doable degree
-            this->mot.moveOfGivenAngle(orientation * (int)mapToDegree);
-            last = read;
-        }
+        last = potVal;
     }
+    // Serial.println("move of : " + String(last - potVal));
+    this->mot.moveOfGivenSteps(last - potVal);
+    last = potVal;
+}
+
+void AlarmTask::serialInput(int read)
+{
+    int potVal = map(read, 0, 1024, 0, 100);
+
+    potVal = 100 - potVal;
+
+    if (serial_last == -1)
+    {
+        serial_last = potVal;
+    }
+
+    this->mot.moveOfGivenSteps(serial_last - potVal);
+
+    serial_last = potVal;
 }
