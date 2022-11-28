@@ -10,7 +10,7 @@
 #include "NormalTask.h"
 #include "PreAlarmTask.h"
 #include "AlarmTask.h"
-
+#include "MsgService.h"
 // TODO state diagram
 
 Scheduler scheduler;
@@ -23,23 +23,22 @@ LCD_I2C lcd(0x27, 20, 4);
 Potentiometer pot(A0);
 Led LedA(2);
 Led LedB(4);
-Bounce button = Bounce();
-
+int buttonPin = 12;
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
 Task *normal = new NormalTask(sonarSensor, LedB, blinkingLed, lights);
 Task *pre_alarm = new PreAlarmTask(sonarSensor, LedB, blinkingLed, lights, lcd);
-Task *alarm = new AlarmTask(motor, pot, sonarSensor, LedB, blinkingLed, lights, lcd, button);
+Task *alarm = new AlarmTask(motor, pot, sonarSensor, LedB, blinkingLed, lights, lcd, buttonPin);
 
 bool once = false;
 
 void setup()
 {
   Serial.begin(9600);
-  button.attach(12, INPUT);
-  button.interval(50);
   lcd.begin();
   lcd.backlight();
+
+  MsgService.init();
 
   normal->init(mcd_period);
   pre_alarm->init(mcd_period);
