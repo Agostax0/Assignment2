@@ -1,4 +1,4 @@
-package src;
+package main_package;
 
 /**
  * Simple interface for an async msg communication channel

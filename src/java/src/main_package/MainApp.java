@@ -1,4 +1,4 @@
-package src;
+package main_package;
 
 import java.awt.BorderLayout;
 
@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,7 +19,9 @@ import jssc.SerialPortList;
 public class MainApp{
 	private static String CONNECT = "Connect";
 	private static String DISCONNECT = "Disconnect";
-	private static String FAILURE = "Failure";
+	private static String MANUAL_ON = "Manual ON";
+	private static String MANUAL_OFF = "Manual OFF";
+	//private static String FAILURE = "Failure";
 	
 	private static SerialCommChannel channel;
 
@@ -42,7 +45,16 @@ public class MainApp{
 		JPanel topPanel = new JPanel();
 		topPanel.add(portList);
 		topPanel.add(connectButton);
-
+		
+		JButton bBtn = new JButton(MANUAL_OFF);
+		JSlider slider = new JSlider(0,1023,(int)1023/2);
+		slider.setEnabled(false);
+		
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.add(bBtn);
+		bottomPanel.add(slider);
+		
+		window.add(bottomPanel, BorderLayout.SOUTH);
 		window.add(topPanel,BorderLayout.NORTH);
 
 		
@@ -79,7 +91,6 @@ public class MainApp{
 						
 					}
 				};
-				
 				thread.start();*/
 			}
 			else {
@@ -87,6 +98,25 @@ public class MainApp{
 				portList.setEnabled(true);
 				src.setText(CONNECT);
 			}
+		});
+		
+		bBtn.addActionListener(al->{
+			JButton btn = (JButton) al.getSource();
+			
+			if(btn.getText().equals(MANUAL_ON)) {
+				slider.setEnabled(false);
+				btn.setText(MANUAL_OFF);
+			}
+			else {
+				slider.setEnabled(true);
+				btn.setText(MANUAL_ON);
+			}
+		});
+		
+		slider.addChangeListener(cl->{
+			JSlider src = (JSlider) cl.getSource();
+			int value = src.getValue();
+			channel.sendMsg(String.valueOf(value));
 		});
 		
 
@@ -106,21 +136,19 @@ public class MainApp{
 			if(channel!=null) {
 				try {
 					String msg = channel.receiveMsg();
-					System.out.println(msg);
 					if(msg!="") {
 						double waterLevel = Double.parseDouble(msg);
 						data.add(x++,waterLevel);
 					}
-					
 					
 				} catch (InterruptedException e) {
 					System.out.println("failed to receive in port");
 					e.printStackTrace();
 				}
 			}
-			else {
+			/*else {
 				System.out.println("failed to connect to port");
-			}
+			}*/
 			
 		}
 	}
