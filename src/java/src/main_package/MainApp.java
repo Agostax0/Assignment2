@@ -116,16 +116,16 @@ public class MainApp{
 		
 		window.setVisible(true);
 		
-		int x = 0;
-		boolean first_read= true;
-		int last = 0;
+		int time = 0;
+		
 		while(true) {
 			if(channel!=null) {
 				try {
 					String msg = channel.receiveMsg();
 					if(msg!="") {
 						double waterLevel = Double.parseDouble(msg);
-						data.add(x++/5.0,waterLevel);
+						time++;
+						data.add(time/5.0,waterLevel);
 						if(waterLevel<=ALARM_THRESHOLD && slider.isEnabled()){
 							
 							channel.sendMsg(""+slider.getValue());
