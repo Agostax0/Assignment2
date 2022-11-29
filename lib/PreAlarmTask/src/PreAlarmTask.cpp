@@ -39,6 +39,9 @@ void PreAlarmTask::tick()
         this->lights.tick();
     }
     else{
+        if(getState(this->sonar_sensor.getDistance(cm))==NORMAL){
+            lcd.clear();
+        }
         updateSerial();
     }
 }

@@ -12,7 +12,7 @@
 
 Scheduler scheduler;
 SonarSensor sonarSensor(7, 6);
-LightSensor lightSensor(A2);
+LightSensor lightSensor(A1);
 StepMotor motor(9, 10, 11);
 InfraredSensor pirSensor(8);
 BlinkingLed blinkingLed(3);
@@ -48,4 +48,5 @@ void setup()
 void loop()
 {
   scheduler.schedule();
+  //delay(500);
 }

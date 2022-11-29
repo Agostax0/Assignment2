@@ -7,10 +7,10 @@
 #define PE_pre_alarm 400
 #define PE_alarm 200
 
-#define mcd_period 200
+#define mcd_period 100
 
-#define T1 5000
-#define TH_L 200
+#define T1 1000
+#define TH_L 600
 
 #define WL1 25
 #define WL2 15

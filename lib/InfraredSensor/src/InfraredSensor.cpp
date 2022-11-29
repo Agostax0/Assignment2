@@ -8,7 +8,10 @@ InfraredSensor::InfraredSensor(unsigned short pin)
 
 bool InfraredSensor::readChangeInMovement()
 {
-    short value = digitalRead(this->pin);
-
+    short value = digitalRead(8);
+    if(value == HIGH){
+        //Serial.println("PIR: " + String(value));
+    }
+    
     return value;
 }

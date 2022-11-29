@@ -61,9 +61,8 @@ public class MainApp{
 
 		
 		XYSeries data = new XYSeries("Sonar Sensor Readings");
-		data.setMaximumItemCount(30);
 		XYSeriesCollection dataset = new XYSeriesCollection(data);
-		
+		data.setMaximumItemCount(100);
 		JFreeChart chart = ChartFactory.createXYLineChart("Water Level", "Time (seconds)" , "Height", dataset);
 		
 		connectButton.addActionListener(e->{
@@ -123,15 +122,22 @@ public class MainApp{
 				try {
 					String msg = channel.receiveMsg();
 					if(msg!="") {
-						double waterLevel = Double.parseDouble(msg);
+						double waterLevel;
+						try {
+							 waterLevel = Double.parseDouble(msg);
+						}
+						catch(NumberFormatException e) {
+							waterLevel = 0;
+						}
+						
 						time++;
-						data.add(time/5.0,waterLevel);
+						
+						data.add((time)/5.0,waterLevel);
 						if(waterLevel<=ALARM_THRESHOLD && slider.isEnabled()){
 							
 							channel.sendMsg(""+slider.getValue());
-							
+							Thread.sleep(400);
 						}
-						Thread.sleep(200);
 					}
 					
 				} catch (InterruptedException e) {

@@ -71,10 +71,6 @@ void AlarmTask::tick()
                 // actual manual handling
                 lcd.setCursor(0, 3);
                 lcd.print("MANUAL");
-                lcd.setCursor(0, 2);
-                lcd.print(this->mot.getSteps());
-                lcd.setCursor(5, 2);
-                lcd.print(this->mot.getStepsLeft());
                 this->manualInput();
                 this->mot.tick();
             }
@@ -82,16 +78,15 @@ void AlarmTask::tick()
             { // this is the 00 case in the truth table -> the automatic handling
                 lcd.setCursor(0, 3);
                 lcd.print("AUTO");
-                lcd.setCursor(0, 2);
-                lcd.print(this->mot.getSteps());
-                lcd.setCursor(5, 2);
-                lcd.print(this->mot.getStepsLeft());
                 this->automaticInput();
             }
         }
     }
     else
     {
+        if(getState(this->sonar_sensor.getDistance(cm))==NORMAL){
+            lcd.clear();
+        }
         updateSerial();
         this->manual = false;
 

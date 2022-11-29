@@ -11,7 +11,7 @@ public:
 
     LightSensor(uint8_t pin);
 
-    unsigned short getLightLevel();
+    int getLightLevel();
 
 private:
     uint8_t pin;
