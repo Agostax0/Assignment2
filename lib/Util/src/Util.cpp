@@ -1,5 +1,6 @@
 #include "Util.h"
 #include "MsgService.h"
+/* Dictates at which distance which state the system is on */
 int getState(double distance)
 {
     if (distance >= WL1)
@@ -15,7 +16,7 @@ int getState(double distance)
         return ALARM;
     }
 }
-
+/* This function returns true when value is withing the expected +- (expected  *  percentage / 100) */
 bool range(int value, int expected, int percentage)
 {
     double percentage_value = expected * (percentage / 100.0);
@@ -28,6 +29,7 @@ bool range(int value, int expected, int percentage)
 }
 bool serial;
 int serial_read;
+/* This function updates a global bool value to dictate serial input in an ALARM state */
 void updateSerial()
 {
     if (MsgService.isMsgAvailable())

@@ -22,11 +22,11 @@ public:
     void tick();
 
     void resetToZero();
-
+    /* returns the how much the motor has moved */
     int getSteps(){return this->current_steps;}
-
+    /* returns the how much the motor has to move */  
     int getStepsLeft(){return this->stepsLeft;}
-
+    /* resets both step to take and step the motor took */
     void reset(){this->stepsLeft = 0; this->current_steps = 0;}
 private:
     unsigned short actPin;

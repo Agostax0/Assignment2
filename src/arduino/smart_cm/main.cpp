@@ -1,10 +1,7 @@
 #include <Arduino.h>
 #include "Util.h"
 #include "StepMotor.h"
-
 #include "Potentiometer.h"
-
-
 #include "SmartLighting.h"
 #include "Scheduler.h"
 #include "NormalTask.h"
@@ -30,8 +27,6 @@ Task *normal = new NormalTask(sonarSensor, LedB, blinkingLed, lights);
 Task *pre_alarm = new PreAlarmTask(sonarSensor, LedB, blinkingLed, lights, lcd);
 Task *alarm = new AlarmTask(motor, pot, sonarSensor, LedB, blinkingLed, lights, lcd, buttonPin);
 
-bool once = false;
-
 void setup()
 {
   Serial.begin(9600);
@@ -53,5 +48,4 @@ void setup()
 void loop()
 {
   scheduler.schedule();
-  //delay(500);
 }

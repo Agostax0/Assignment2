@@ -9,7 +9,7 @@ BlinkingLed::BlinkingLed(unsigned short pin)
     pinMode(this->pin, OUTPUT);
     digitalWrite(this->pin,LOW);
 }
-
+/* This method sets the led brightness according */
 void BlinkingLed::tick()
 {
     if (currentBrightness <= 0 || currentBrightness > 255)
@@ -22,7 +22,7 @@ void BlinkingLed::tick()
 
     analogWrite(this->pin, this->currentBrightness);
 }
-
+/* This method sets the speed of which it should increase in brightness */
 void BlinkingLed::setSpeed(float speed)
 {
     this->speed = speed;
@@ -36,8 +36,4 @@ void BlinkingLed::switchOn()
 {
     digitalWrite(this->pin, HIGH);
     this->currentBrightness = 255;
-}
-
-int BlinkingLed::getState(){
-    return (this->currentBrightness>0) ? 1 : 0; 
 }

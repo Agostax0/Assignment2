@@ -49,10 +49,6 @@ void AlarmTask::tick()
         {
             lcd.setCursor(0, 3);
             lcd.print("SERIAL");
-            lcd.setCursor(0, 2);
-            lcd.print(this->mot.getSteps());
-            lcd.setCursor(5, 2);
-            lcd.print(this->mot.getStepsLeft());
             serialInput(serial_read);
             this->mot.tick();
         }
@@ -63,14 +59,12 @@ void AlarmTask::tick()
             {                        // manual=false && button was pressed
                 this->manual = true; // activate manual mode
                 this->mot.reset();
-                // Serial.println("Manual Mode Activate");
             }
             else if (this->manual && change)
             {                         // manual=true && button was pressed
                 this->manual = false; // deactivate manual mode
                 this->mot.reset();
                 this->last = -1;
-                // Serial.println("Manual Mode DeActivate");
             }
             else if (this->manual && !change)
             { // manual=true && button was not pressed
@@ -127,14 +121,13 @@ void AlarmTask::manualInput()
 
     potVal = 100 - potVal;
 
-    // Serial.println("PotVal: " + String(potVal));
-
     if (last == -1)
     {
         last = potVal;
     }
-    // Serial.println("move of : " + String(last - potVal));
+    
     this->mot.moveOfGivenSteps(last - potVal);
+
     last = potVal;
 }
 

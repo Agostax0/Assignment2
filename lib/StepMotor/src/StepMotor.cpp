@@ -17,17 +17,17 @@ void StepMotor::init(int period)
 {
     Task::init(period);
 }
-
+/* adds to the steps to take the given degree converted to steps */
 void StepMotor::moveOfGivenAngle(int degree)
 {
     this->stepsLeft += degreeToStep(degree);
 }
-
+/* adds to the steps to take directly */
 void StepMotor::moveOfGivenSteps(int steps)
 {
     this->stepsLeft += steps;
 }
-
+/* This function directly moves the motor of 1 steps, direction is dictated by the sign of the steps to take */
 void StepMotor::tick()
 {
     if (this->stepsLeft != 0)
@@ -57,7 +57,7 @@ void StepMotor::tick()
         digitalWrite(this->actPin, HIGH);
     }
 }
-
+/* brings the motor head back to its original state */
 void StepMotor::resetToZero()
 {
 

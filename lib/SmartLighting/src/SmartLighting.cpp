@@ -34,7 +34,7 @@ void SmartLighting::tick()
             this->A.switchOn();
         }
 
-        if (this->pir.readChangeInMovement())
+        if (this->pir.readChangeInMovement()) //RESETS THE COOLDOWN IF A PRESENCE WAS DETECTED
         {
             pir_cooldown = millis();
         }

@@ -36,11 +36,11 @@ private:
     int serial_last = -1;
 
     bool manual;
-
+    /* Automatic input, rules how much the motor should move to get back to PRE-ALARM levels */
     void automaticInput();
-
+    /* Manual input, dictated by the potentiometer movement */
     void manualInput();
-
+    /* Serial input, dictated by the serial-side slider movement */
     void serialInput(int value);
 };
 

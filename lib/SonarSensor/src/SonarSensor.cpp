@@ -9,6 +9,7 @@ SonarSensor::SonarSensor(unsigned short TrigPin, unsigned short EchoPin)
     pinMode(this->EchoPin, INPUT);
     this->measured_distance = -1;
 }
+/* This function activates the sonar and receives the distance of the first obj in front of it */
 void SonarSensor::calcDistance(short powerOfTen)
 {
     long duration;
@@ -29,7 +30,7 @@ void SonarSensor::calcDistance(short powerOfTen)
 
 
 }
-
+/* this function return the distance measured beforehand */
 double SonarSensor::getDistance(short powerOfTen){
         if(this->measured_distance == -1){
             this->calcDistance(powerOfTen);

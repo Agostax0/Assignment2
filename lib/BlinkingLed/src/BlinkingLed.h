@@ -15,8 +15,6 @@ public:
 
     void switchOff();
 
-    int getState();
-
     void switchOn();
 
 private:

@@ -13,7 +13,7 @@ PreAlarmTask::PreAlarmTask(SonarSensor sonar, Led b, BlinkingLed c, SmartLightin
 void PreAlarmTask::init(int period)
 {
     Task::init(period);
-    this->led_C.setSpeed(255.0 / (1000 / mcd_period));
+    this->led_C.setSpeed((255*2)/(2000/mcd_period));
 }
 
 void PreAlarmTask::tick()
