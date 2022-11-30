@@ -1,3 +1,13 @@
+//TODO add matricola
+/* 
+  Componenti del gruppo:
+
+  -Agosta Alessandro 
+
+
+  -Riccardo Tassinari 
+
+*/
 #include <Arduino.h>
 #include "Util.h"
 #include "StepMotor.h"
@@ -8,19 +18,30 @@
 #include "PreAlarmTask.h"
 #include "AlarmTask.h"
 #include "MsgService.h"
-// TODO state diagram
+#define TrigPin 7
+#define EchoPin 6
+#define LightSensorPin A1
+#define PotentiometerPin A0
+#define ActPin 9
+#define DirPin 10
+#define PulsePin 11
+#define PirPin 8
+#define BlinkingPin 3
+#define LedAPin 2
+#define LedBPin 4
+#define ButtonPin 12
 
 Scheduler scheduler;
-SonarSensor sonarSensor(7, 6);
-LightSensor lightSensor(A1);
-StepMotor motor(9, 10, 11);
-InfraredSensor pirSensor(8);
-BlinkingLed blinkingLed(3);
+SonarSensor sonarSensor(TrigPin, EchoPin);
+LightSensor lightSensor(LightSensorPin);
+StepMotor motor(ActPin, DirPin, PulsePin);
+InfraredSensor pirSensor(PirPin);
+BlinkingLed blinkingLed(BlinkingPin);
 LCD_I2C lcd(0x27, 20, 4);
-Potentiometer pot(A0);
-Led LedA(2);
-Led LedB(4);
-int buttonPin = 12;
+Potentiometer pot(PotentiometerPin);
+Led LedA(LedAPin);
+Led LedB(LedBPin);
+int buttonPin = ButtonPin;
 SmartLighting lights = SmartLighting(LedA, lightSensor, pirSensor);
 
 Task *normal = new NormalTask(sonarSensor, LedB, blinkingLed, lights);
