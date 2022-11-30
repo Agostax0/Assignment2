@@ -27,20 +27,17 @@ void SmartLighting::tick()
 
     if (!light_level || (!this->pir.readChangeInMovement() && cooldown)) //TOO MUCH LIGHT OR (THERE WAS NONE && T1 TIME HAS ELAPSED SINCE LAST DETECTION)
     {
+        Serial.println("NODETECTED");
         this->A.switchOff();
         pir_cooldown = -1;
     }
     else
     {
-
         if (this->pir.readChangeInMovement()) //TURN ON THE LED AFTER CHECKING PRESENCE
         {
+            Serial.println("DETECTED");
             this->A.switchOn();
-        }
-
-        if (this->pir.readChangeInMovement()) //RESETS THE COOLDOWN IF A PRESENCE WAS DETECTED
-        {
-            pir_cooldown = millis();
+            pir_cooldown = millis();    //RESETS THE COOLDOWN IF SOMEONE WAS DETECTED
         }
     }
 }
